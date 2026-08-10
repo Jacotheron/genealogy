@@ -25,10 +25,10 @@
                         {{ __('app.home') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('people.search') }}" :active="request()->routeIs('people.search')">
-                        <x-ts-icon icon="tabler.search" class="mr-1 inline-block size-5" />
-                        {{ __('app.search') }}
-                    </x-nav-link>
+{{--                    <x-nav-link href="{{ route('people.search') }}" :active="request()->routeIs('people.search')">--}}
+{{--                        <x-ts-icon icon="tabler.search" class="mr-1 inline-block size-5" />--}}
+{{--                        {{ __('app.search') }}--}}
+{{--                    </x-nav-link>--}}
                 </div>
 
                 <div class="flex items-center gap-5">
@@ -37,10 +37,10 @@
                         {{ __('birthday.birthdays') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('help') }}" :active="request()->routeIs('help')">
-                        <x-ts-icon icon="tabler.help" class="mr-1 inline-block size-5" />
-                        {{ __('app.help') }}
-                    </x-nav-link>
+{{--                    <x-nav-link href="{{ route('help') }}" :active="request()->routeIs('help')">--}}
+{{--                        <x-ts-icon icon="tabler.help" class="mr-1 inline-block size-5" />--}}
+{{--                        {{ __('app.help') }}--}}
+{{--                    </x-nav-link>--}}
                 </div>
             </div>
         </div>
@@ -150,25 +150,25 @@
                                     </x-dropdown-link>
 
                                     {{-- create / import / export team --}}
-                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                                        <x-dropdown-link href="{{ route('teams.create') }}">
-                                            <x-ts-icon icon="tabler.droplet-plus" class="mr-1 inline-block size-5" />
-                                            {{ __('team.create') }}
-                                        </x-dropdown-link>
+{{--                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())--}}
+{{--                                        <x-dropdown-link href="{{ route('teams.create') }}">--}}
+{{--                                            <x-ts-icon icon="tabler.droplet-plus" class="mr-1 inline-block size-5" />--}}
+{{--                                            {{ __('team.create') }}--}}
+{{--                                        </x-dropdown-link>--}}
 
-                                        <hr />
+{{--                                        <hr />--}}
 
-                                        {{-- gedcom --}}
-                                        <x-dropdown-link href="{{ route('gedcom.importteam') }}">
-                                            <x-ts-icon icon="tabler.droplet-up" class="mr-1 inline-block size-5" />
-                                            {{ __('gedcom.gedcom_import') }}
-                                        </x-dropdown-link>
+{{--                                        --}}{{-- gedcom --}}
+{{--                                        <x-dropdown-link href="{{ route('gedcom.importteam') }}">--}}
+{{--                                            <x-ts-icon icon="tabler.droplet-up" class="mr-1 inline-block size-5" />--}}
+{{--                                            {{ __('gedcom.gedcom_import') }}--}}
+{{--                                        </x-dropdown-link>--}}
 
-                                        <x-dropdown-link href="{{ route('gedcom.exportteam') }}">
-                                            <x-ts-icon icon="tabler.droplet-down" class="mr-1 inline-block size-5" />
-                                            {{ __('gedcom.gedcom_export') }}
-                                        </x-dropdown-link>
-                                    @endcan
+{{--                                        <x-dropdown-link href="{{ route('gedcom.exportteam') }}">--}}
+{{--                                            <x-ts-icon icon="tabler.droplet-down" class="mr-1 inline-block size-5" />--}}
+{{--                                            {{ __('gedcom.gedcom_export') }}--}}
+{{--                                        </x-dropdown-link>--}}
+{{--                                    @endcan--}}
                                 </div>
                             </x-slot>
                         </x-dropdown>
@@ -180,12 +180,12 @@
                     {{ __('auth.login') }}
                 </x-nav-link>
 
-                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::registration()))
-                    <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
-                        <x-ts-icon icon="tabler.user-plus" class="mr-1 inline-block size-5" />
-                        {{ __('auth.register') }}
-                    </x-nav-link>
-                @endif
+{{--                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::registration()))--}}
+{{--                    <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">--}}
+{{--                        <x-ts-icon icon="tabler.user-plus" class="mr-1 inline-block size-5" />--}}
+{{--                        {{ __('auth.register') }}--}}
+{{--                    </x-nav-link>--}}
+{{--                @endif--}}
 
                 <x-set.language />
             @endauth
@@ -229,10 +229,10 @@
                 {{ __('app.home') }}
             </x-nav-link-responsive>
 
-            <x-nav-link-responsive href="{{ route('people.search') }}" :active="request()->routeIs('people.search')">
-                <x-ts-icon icon="tabler.search" class="mr-1 inline-block size-5" />
-                {{ __('app.search') }}
-            </x-nav-link-responsive>
+{{--            <x-nav-link-responsive href="{{ route('people.search') }}" :active="request()->routeIs('people.search')">--}}
+{{--                <x-ts-icon icon="tabler.search" class="mr-1 inline-block size-5" />--}}
+{{--                {{ __('app.search') }}--}}
+{{--            </x-nav-link-responsive>--}}
 
             <x-nav-link-responsive
                 href="{{ route('people.birthdays') }}"
@@ -242,10 +242,10 @@
                 {{ __('birthday.birthdays') }}
             </x-nav-link-responsive>
 
-            <x-nav-link-responsive href="{{ route('help') }}" :active="request()->routeIs('help')">
-                <x-ts-icon icon="tabler.help" class="mr-1 inline-block size-5" />
-                {{ __('app.help') }}
-            </x-nav-link-responsive>
+{{--            <x-nav-link-responsive href="{{ route('help') }}" :active="request()->routeIs('help')">--}}
+{{--                <x-ts-icon icon="tabler.help" class="mr-1 inline-block size-5" />--}}
+{{--                {{ __('app.help') }}--}}
+{{--            </x-nav-link-responsive>--}}
         </div>
 
         @guest
@@ -255,12 +255,12 @@
                     {{ __('auth.login') }}
                 </x-nav-link-responsive>
 
-                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::registration()))
-                    <x-nav-link-responsive href="{{ route('register') }}" :active="request()->routeIs('register')">
-                        <x-ts-icon icon="tabler.user-plus" class="mr-1 inline-block size-5" />
-                        {{ __('auth.register') }}
-                    </x-nav-link-responsive>
-                @endif
+{{--                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::registration()))--}}
+{{--                    <x-nav-link-responsive href="{{ route('register') }}" :active="request()->routeIs('register')">--}}
+{{--                        <x-ts-icon icon="tabler.user-plus" class="mr-1 inline-block size-5" />--}}
+{{--                        {{ __('auth.register') }}--}}
+{{--                    </x-nav-link-responsive>--}}
+{{--                @endif--}}
             </div>
 
             {{-- responsive settings options --}}
@@ -350,32 +350,32 @@
                             {{ __('team.settings') }}
                         </x-nav-link-responsive>
 
-                        @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                            <x-nav-link-responsive
-                                href="{{ route('teams.create') }}"
-                                :active="request()->routeIs('teams.create')"
-                            >
-                                <x-ts-icon icon="tabler.droplet-plus" class="mr-1 inline-block size-5" />
-                                {{ __('team.create') }}
-                            </x-nav-link-responsive>
+{{--                        @can('create', Laravel\Jetstream\Jetstream::newTeamModel())--}}
+{{--                            <x-nav-link-responsive--}}
+{{--                                href="{{ route('teams.create') }}"--}}
+{{--                                :active="request()->routeIs('teams.create')"--}}
+{{--                            >--}}
+{{--                                <x-ts-icon icon="tabler.droplet-plus" class="mr-1 inline-block size-5" />--}}
+{{--                                {{ __('team.create') }}--}}
+{{--                            </x-nav-link-responsive>--}}
 
-                            {{-- gedcom --}}
-                            <x-nav-link-responsive
-                                href="{{ route('gedcom.importteam') }}"
-                                :active="request()->routeIs('gedcom.importteam')"
-                            >
-                                <x-ts-icon icon="tabler.droplet-up" class="mr-1 inline-block size-5" />
-                                {{ __('gedcom.gedcom_import') }}
-                            </x-nav-link-responsive>
+{{--                            --}}{{-- gedcom --}}
+{{--                            <x-nav-link-responsive--}}
+{{--                                href="{{ route('gedcom.importteam') }}"--}}
+{{--                                :active="request()->routeIs('gedcom.importteam')"--}}
+{{--                            >--}}
+{{--                                <x-ts-icon icon="tabler.droplet-up" class="mr-1 inline-block size-5" />--}}
+{{--                                {{ __('gedcom.gedcom_import') }}--}}
+{{--                            </x-nav-link-responsive>--}}
 
-                            <x-nav-link-responsive
-                                href="{{ route('gedcom.exportteam') }}"
-                                :active="request()->routeIs('gedcom.exportteam')"
-                            >
-                                <x-ts-icon icon="tabler.droplet-down" class="mr-1 inline-block size-5" />
-                                {{ __('gedcom.gedcom_export') }}
-                            </x-nav-link-responsive>
-                        @endcan
+{{--                            <x-nav-link-responsive--}}
+{{--                                href="{{ route('gedcom.exportteam') }}"--}}
+{{--                                :active="request()->routeIs('gedcom.exportteam')"--}}
+{{--                            >--}}
+{{--                                <x-ts-icon icon="tabler.droplet-down" class="mr-1 inline-block size-5" />--}}
+{{--                                {{ __('gedcom.gedcom_export') }}--}}
+{{--                            </x-nav-link-responsive>--}}
+{{--                        @endcan--}}
                     @endif
                 </div>
             </div>

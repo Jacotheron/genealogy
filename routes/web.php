@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Route;
 // -----------------------------------------------------------------------------------
 // frontend routes
 // -----------------------------------------------------------------------------------
-Route::livewire('password-generator', 'livewire::password-generator')->name('password.generator');
+//Route::livewire('password-generator', 'livewire::password-generator')->name('password.generator');
+
+Route::redirect('/search', '/', 302)->name('people.search');
 
 Route::controller(App\Http\Controllers\Front\PageController::class)->group(function (): void {
-    Route::get('/', 'home')->name('home');
-    Route::get('about', 'about')->name('about');
-    Route::get('help', 'help')->name('help');
+    //    Route::get('/', 'home')->name('home');
+    //    Route::get('about', 'about')->name('about');
+    //    Route::get('help', 'help')->name('help');
 });
 
 // -----------------------------------------------------------------------------------
@@ -29,7 +31,7 @@ Route::middleware([
     Route::livewire('team', 'livewire::team')->name('team');
     Route::livewire('teamlog', 'livewire::teamlog')->name('teamlog');
     Route::livewire('peoplelog', 'livewire::peoplelog')->name('peoplelog');
-    Route::livewire('test', 'livewire::test')->name('test');
+    //    Route::livewire('test', 'livewire::test')->name('test');
 
     Route::controller(App\Http\Controllers\Back\TeamController::class)->group(function (): void {
         Route::put('/teams/{team}/transfer-ownership', 'transferOwnership')->name('teams.transfer-ownership');
@@ -39,7 +41,7 @@ Route::middleware([
     // people
     // -----------------------------------------------------------------------------------
     Route::controller(App\Http\Controllers\Back\PeopleController::class)->group(function (): void {
-        Route::get('search', 'search')->name('people.search');
+        Route::get('/', 'search')->name('home');
         Route::get('birthdays', 'birthdays')->name('people.birthdays');
 
         Route::get('people/add', 'add')->name('people.add');
@@ -67,8 +69,8 @@ Route::middleware([
     // -----------------------------------------------------------------------------------
     // gedcom
     // -----------------------------------------------------------------------------------
-    Route::livewire('exportteam', 'gedcom::exportteam')->name('gedcom.exportteam');
-    Route::livewire('importteam', 'gedcom::importteam')->name('gedcom.importteam');
+//    Route::livewire('exportteam', 'gedcom::exportteam')->name('gedcom.exportteam');
+//    Route::livewire('importteam', 'gedcom::importteam')->name('gedcom.importteam');
 
     // -----------------------------------------------------------------------------------
     // developer
@@ -101,7 +103,7 @@ Route::middleware([
 // set application language in session
 // actual language switching wil be handled by App\Http\Middleware\Localization::class
 // -----------------------------------------------------------------------------------
-Route::get('language/{locale}', function ($locale) {
+Route::get('language/{locale}', static function ($locale) {
     session()->put('locale', $locale);
 
     return back();

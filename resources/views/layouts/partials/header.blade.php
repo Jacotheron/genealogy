@@ -8,10 +8,10 @@
             <x-ts-breadcrumbs lg separator="|" />
         </div>
 
-        <div class="mx-auto flex-1 p-2 text-end" aria-label="Current Date">
-            <time datetime="{{ Carbon\Carbon::today()->toDateString() }}">
-                {{ Carbon\Carbon::today()->timezone(session('timezone') ?? 'UTC')->isoFormat('LL') }}
-            </time>
-        </div>
+{{--        <div class="mx-auto flex-1 p-2 text-end" aria-label="Current Date">--}}
+{{--            <time datetime="{{ Carbon\Carbon::today()->toDateString() }}">--}}
+{{--                {{ Carbon\Carbon::today()->timezone(session('timezone') ?? 'UTC')->isoFormat('LL') }}--}}
+{{--            </time>--}}
+{{--        </div>--}}
     </div>
 </header>

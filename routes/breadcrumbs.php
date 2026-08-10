@@ -23,26 +23,26 @@ TallStackUi::breadcrumbs()
     ->for('home', fn (BreadcrumbTrail $trail) => $trail
         ->add(label: __('app.home'), link: '/', icon: 'home')
     )
-    ->for('password.generator', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('app.password_generator'), link: route('password.generator'))
-    )
-    ->for('about', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: 'About', link: route('about'))
-    )
-    ->for('help', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: 'Help', link: route('help'), icon: 'tabler.help')
-    )
-    ->for('policy.show', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('app.privacy_policy'), link: route('policy.show'))
-    )
-    ->for('terms.show', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('app.terms_of_service'), link: route('terms.show'))
-    )
+//    ->for('password.generator', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('app.password_generator'), link: route('password.generator'))
+//    )
+//    ->for('about', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: 'About', link: route('about'))
+//    )
+//    ->for('help', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: 'Help', link: route('help'), icon: 'tabler.help')
+//    )
+//    ->for('policy.show', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('app.privacy_policy'), link: route('policy.show'))
+//    )
+//    ->for('terms.show', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('app.terms_of_service'), link: route('terms.show'))
+//    )
     // -----------------------------------------------------------------------------------
     // teams
     // -----------------------------------------------------------------------------------
@@ -61,17 +61,17 @@ TallStackUi::breadcrumbs()
     // -----------------------------------------------------------------------------------
     // pages
     // -----------------------------------------------------------------------------------
-    ->for('test', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: 'Test', link: route('test'))
-    )
+//    ->for('test', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: 'Test', link: route('test'))
+//    )
     // -----------------------------------------------------------------------------------
     // people
     // -----------------------------------------------------------------------------------
-    ->for('people.search', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('app.search'), link: route('people.search'), icon: 'tabler.search')
-    )
+//    ->for('people.search', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('app.search'), link: route('people.search'), icon: 'tabler.search')
+//    )
     ->for('people.birthdays', fn (BreadcrumbTrail $trail) => $trail
         ->parent('home')
         ->add(label: __('birthday.birthdays'), link: route('people.birthdays'), icon: 'tabler.cake')
@@ -159,14 +159,14 @@ TallStackUi::breadcrumbs()
     // -----------------------------------------------------------------------------------
     // gedcom
     // -----------------------------------------------------------------------------------
-    ->for('gedcom.exportteam', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('gedcom.gedcom_export'), link: route('gedcom.exportteam'), icon: 'tabler.droplet-down')
-    )
-    ->for('gedcom.importteam', fn (BreadcrumbTrail $trail) => $trail
-        ->parent('home')
-        ->add(label: __('gedcom.gedcom_import'), link: route('gedcom.importteam'), icon: 'tabler.droplet-up')
-    )
+//    ->for('gedcom.exportteam', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('gedcom.gedcom_export'), link: route('gedcom.exportteam'), icon: 'tabler.droplet-down')
+//    )
+//    ->for('gedcom.importteam', fn (BreadcrumbTrail $trail) => $trail
+//        ->parent('home')
+//        ->add(label: __('gedcom.gedcom_import'), link: route('gedcom.importteam'), icon: 'tabler.droplet-up')
+//    )
     // -----------------------------------------------------------------------------------
     // developer - pages
     // -----------------------------------------------------------------------------------

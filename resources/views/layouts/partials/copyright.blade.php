@@ -10,7 +10,7 @@
             {{ __('app.open_source') }}
             <x-link href="/about" aria-label="Read about the license">{{ __('app.licence') }}</x-link>.
         </p>
-        <p>{{ __('app.free_use') }}.</p>
+{{--        <p>{{ __('app.free_use') }}.</p>--}}
     </div>
 
     <!-- Right Section: Design and Development Credits -->
