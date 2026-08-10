@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'all_teams'     => 'Alle Spanne',
+    'cancel'        => 'Kanselleer',
+    'couples'       => 'Paartjies',
+    'create'        => 'Skep Span',
+    'delete'        => 'Verwyder Span',
+    'description'   => 'Beskrywing',
+    'id'            => 'ID',
+    'manage'        => 'Bestuur Span',
+    'name'          => 'Naam',
+    'owner'         => 'Eienaar',
+    'persons'       => 'Persone',
+    'settings'      => 'Span Verstellings',
+    'switch'        => 'Verander Span',
+    'team'          => 'Span',
+    'team_personal' => 'Persoonlike Span',
+    'teams'         => 'Spanne',
+    'users'         => 'Gebruikers',
+
+    'team_overview'                   => 'Span Oorsig',
+    'click_to_view_members'           => 'Kliek om al die spanlede te sien',
+    'click_to_view_persons'           => 'Kliek om al die falimielede te sien',
+    'click_to_view_couples'           => 'Kliek om al die verhoudings te sien',
+    'no_results_found'                => 'Geen resultate gevind',
+    'try_adjusting_your_search_terms' => 'Probeer om u soek terme aan te pas',
+    'showing'                         => 'Vertoon',
+    'of'                              => 'van',
+    'reset_filter'                    => 'Herstel Filtrasie',
+    'filtered_by'                     => 'Gefiltreer deur',
+
+    // Messages
+    'team_details'    => 'Span besonderhede',
+    'team_create_new' => 'Skep \'n nuwe span om saam met ander te werk.',
+
+    'team_name'               => 'Span Naam',
+    'team_information'        => 'Die span se naam en ander inligting.',
+    'team_add_member'         => 'Voeg Spanlid By',
+    'team_add_member_message' => 'Voeg \'n spanlid by op die span, sodat hulle saam kan werk.',
+    'team_provide_email'      => 'Voeg die e-pos adres in van die persoon wat op die span bygevoeg moet word.',
+    'team_provide_role'       => 'Dan selekteer die rol wat die spanlid het.',
+    'email'                   => 'E-pos',
+    'role'                    => 'Rol',
+
+    'team_pending'         => 'Hangende Span Uitnodigings',
+    'team_pending_message' => 'Hierdie mense is uitgenooi tot die span, en \'n e-pos is gestuur. Hulle kan aansluit deur die e-pos se instruksies te volg.',
+
+    'change_role'          => 'Verander Rol',
+    'team_members'         => 'Spanlede',
+    'team_members_message' => 'Al die mense wat deel is van die span.',
+    'manage_role'          => 'Bestuur Rol',
+    'leave'                => 'Verlaat',
+    'leave_team'           => 'Verlaat Span',
+    'leave_team_sure'      => 'Is us skeker dat u die span wil verlaat?',
+    'remove'               => 'Verwyder',
+    'remove_member'        => 'Verwyder spanlid',
+    'remove_member_sure'   => 'Is us seker dat u die persoon wil verwyder van die span?',
+    'send_email'           => 'Stuur e-pos',
+
+    'user_not_found'       => 'Ons kon nie \'n geregistreerde gebruiker find met hierdie e-pos adres.',
+    'user_already_in_team' => 'Hierdie gebruiker is alreeds \'n spanlid.',
+    'user_already_invited' => 'Hierdie gebruiker is alreeds uitgenooi om by die span aan te sluit.',
+    'user_not_leave'       => 'U kan nie \'n span verlaat wat u geskep het nie.',
+
+    'delete_team_message' => 'Verwyder die span permanent.',
+    'delete_team_text'    => 'Wanneer \'n span verwyder is, word al sy bronne ook verwyder. Voordat die span verwyder word, laai eers alle inligting af wat u wil stoor.',
+    'delete_team_sure'    => 'Is u seker u wil die span verwyder? Sodra die span verwyder is, word al die bronne ook verwyder.',
+    'can_not_delete'      => 'Hierdie span kan nie verwyder word nie, omdat dit geldige inligting bevat.',
+
+    'been_invited'               => 'U is uitgenooi om by die :team span aan te sluit!',
+    'no_account'                 => 'Indien u nog nie \'n rekening het nie, kan u een skep deur op die knoppie hieronder te kliek. Nadat u u rekening opgestel het, sal u dadelik toegang kry tot die span:',
+    'create_account'             => 'Skep Rekening',
+    'may_accept_already_account' => 'Indien u alreeds \'n rekening het, kan u aansluit deur die knoppie hieronder te kliek:',
+    'may_accept'                 => 'U kan die uitnodiging aanvaar deur die knoppie hieronder te kliek:',
+    'accept_invitation'          => 'Aanvaar Uitnodiging',
+    'discard'                    => 'Indien u nie die uitnodiging verwag het nie, kan u die e-pos ignoreer.',
+
+    'transfer'           => 'Oordrag',
+    'transfer_failed'    => 'Die oordrag het misluk',
+    'transfer_ownership' => 'Eienaarskap Oordrag',
+    'transfer_message'   => 'Dra die eienaarskap van die span oor na \'n ander lid.',
+    'select_new_owner'   => 'Selekteer \'n bestaande spanlid wat die eienaarskap kan oorneem.',
+    'new_owner'          => 'Nuwe Eienaar',
+    'transferred_to'     => 'Eienaarskap oorgedra aan',
+    'can_not_transfer'   => 'Die span eienaarskap kan slegs oorgedra word indien daar ander spanlede is as die huidige span eienaar.',
+
+    'transferred'       => 'Span Eienaarskap Oorgedra',
+    'hello'             => 'Goeiedag',
+    'you_are_new_owner' => 'U is beveorder na eienaar van die span: ',
+    'view_team'         => 'Besigtig Span',
+    'thank_you'         => 'Baie dankie dat u deel is van ons platvorm!',
+
+    'member'     => 'Lid',
+    'membership' => 'Lidmaatskap',
+
+    'personal_team_caution' => 'Oppas',
+    'personal_team_avoid'   => 'Moenie u persoonlike span vir stambome gebruik nie, aangesien eienaarskap van private spanne kan nie oorgedra word na ander lede nie.',
+    'personal_team_instead' => 'Kies eerder \'n span waar u alreeds lid is, of skep \'n nuwe span spesifiek vir die bestuur en deel van stambome met ander lede.',
+    'personal_team_action'  => 'Om \'n nuwe span te skep, gebruik die spyskaart aan die regterkant bo.',
+];
