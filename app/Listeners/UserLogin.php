@@ -36,9 +36,9 @@ final class UserLogin
         // -----------------------------------------------------------------------
         // Log user location (only in production)
         // -----------------------------------------------------------------------
-        if (app()->isProduction()) {
-            $this->logUserLocation($user->id);
-        }
+//        if (app()->isProduction()) {
+//            $this->logUserLocation($user->id);
+//        }
     }
 
     /**
