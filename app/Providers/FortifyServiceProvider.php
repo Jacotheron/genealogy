@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Laravel\Jetstream\Jetstream;
 use Override;
 
 final class FortifyServiceProvider extends ServiceProvider
@@ -44,5 +45,25 @@ final class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('two-factor', fn (Request $request) => Limit::perMinute(5)->by($request->session()->get('login.id')));
+
+        Fortify::registerView(static function (Request $request) {
+            $email = $request->input('email');
+            $token = $request->query('token');
+
+            $invitationExists = tap(Jetstream::teamInvitationModel(), static function ($model) use ($email, $token): bool {
+                return $model::where('email', $email)
+                    ->where('token', $token)
+                    ->exists();
+            });
+
+            if (! $email || ! $token || ! $invitationExists) {
+                abort(403, 'Registration is strictly invite only');
+            }
+
+            return view('auth.register', [
+                'email' => $email,
+                'token' => $token,
+            ]);
+        });
     }
 }

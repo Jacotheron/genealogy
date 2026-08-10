@@ -4,7 +4,7 @@
 @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::registration()))
 {{ __('team.no_account') }}
 
-@component('mail::button', ['url' => route('register')])
+@component('mail::button', ['url' => route('register', ['email' => $invitation->email, 'token' => $invitation->token])])
 {{ __('team.create_account') }}
 @endcomponent
 

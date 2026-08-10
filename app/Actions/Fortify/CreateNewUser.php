@@ -9,9 +9,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use RuntimeException;
+use Throwable;
 
 final class CreateNewUser implements CreatesNewUsers
 {
@@ -21,6 +23,8 @@ final class CreateNewUser implements CreatesNewUsers
      * Create a newly registered user.
      *
      * @param  array<string, string>  $input
+     *
+     * @throws Throwable
      */
     public function create(array $input): User
     {
@@ -32,7 +36,19 @@ final class CreateNewUser implements CreatesNewUsers
             'timezone'  => ['required', Rule::in(timezone_identifiers_list())],
             'password'  => $this->passwordRules(),
             'terms'     => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'token'     => ['required', 'string'],
         ])->validate();
+
+        $invitationModel = Jetstream::teamInvitationModel();
+        $invitation      = $invitationModel::where('email', $input['email'])
+            ->where('token', $input['token'])
+            ->first();
+
+        if (! $invitation) {
+            throw ValidationException::withMessages([
+                'email' => ['This email does not have a valid, active team invitation.'],
+            ]);
+        }
 
         return DB::transaction(fn () => tap(User::create([
             'firstname' => $input['firstname'] ?? null,
@@ -51,6 +67,7 @@ final class CreateNewUser implements CreatesNewUsers
      */
     protected function createTeam(User $user): void
     {
+        return; // we do not need each user to have their own team
         /** @var Team $team */
         $team = $user->ownedTeams()->save(Team::forceCreate([
             'user_id'       => $user->id,

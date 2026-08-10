@@ -59,10 +59,11 @@
                         class="block w-full"
                         type="email"
                         name="email"
-                        :value="old('email')"
-                        required
+                        :value="$email"
                         autocomplete="username"
+                        readonly
                     />
+                    <input type="hidden" name="token" value="{{ $token }}" />
                 </div>
             </div>
 
