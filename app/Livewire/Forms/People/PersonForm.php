@@ -55,11 +55,11 @@ final class PersonForm extends Form
     /**
      * @return Collection<int, Gender>
      */
-    #[Computed(persist: true, seconds: 3600, cache: true)]
-    public function genders(): Collection
-    {
-        return Gender::select(['id', 'name'])->orderBy('name')->get();
-    }
+//    #[Computed(persist: true, seconds: 3600, cache: true)]
+//    public function genders(): Collection
+//    {
+//        return Gender::select(['id', 'name'])->orderBy('name')->get();
+//    }
 
     // -----------------------------------------------------------------------
     // Validation rules without photo uploads (handled in trait)
@@ -75,7 +75,7 @@ final class PersonForm extends Form
             'birthname' => ['nullable', 'string', 'max:255'],
             'nickname'  => ['nullable', 'string', 'max:255'],
             'sex'       => ['nullable', 'string', 'max:1', 'in:m,f', 'required_without:person_id'],
-            'gender_id' => ['nullable', 'integer'],
+//            'gender_id' => ['nullable', 'integer'],
             'yob'       => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
             'dob'       => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
             'pob'       => ['nullable', 'string', 'max:255'],
@@ -108,7 +108,7 @@ final class PersonForm extends Form
             'birthname' => __('person.birthname'),
             'nickname'  => __('person.nickname'),
             'sex'       => __('person.sex'),
-            'gender_id' => __('person.gender'),
+//            'gender_id' => __('person.gender'),
             'yob'       => __('person.yob'),
             'dob'       => __('person.dob'),
             'pob'       => __('person.pob'),
