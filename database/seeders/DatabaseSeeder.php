@@ -13,10 +13,10 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            SettingSeeder::class,
+//        $this->call([
+//            SettingSeeder::class,
 //            GenderSeeder::class,
-        ]);
+//        ]);
 
         // DEMO DATA
 //        $this->call([
