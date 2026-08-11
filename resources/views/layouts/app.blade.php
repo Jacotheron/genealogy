@@ -17,9 +17,12 @@
     </title>
 
     <!-- favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('img/favicon/favicon-16x16.png') }}" sizes="16x16" />
-    <link rel="icon" type="image/png" href="{{ asset('img/favicon/favicon-32x32.png') }}" sizes="32x32" />
-    <link rel="icon" type="image/png" href="{{ asset('img/favicon/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon/favicon-96x96.png?v=2026') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon/favicon-96x96.svg?v=2026') }}" />
+    <link rel="shortcut icon" href="{{ asset('/img/favicon/favicon.ico?v=2026') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/img/favicon/apple-touch-icon.png?v=2026') }}" />
+    <meta name="apple-mobile-web-app-title" content="Theron" />
+    <link rel="manifest" href="{{ asset('/img/favicon/site.webmanifest?v=2026') }}" />
 
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
