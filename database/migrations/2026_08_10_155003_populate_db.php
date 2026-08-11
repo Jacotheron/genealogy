@@ -19,10 +19,11 @@ return new class extends Migration
         Setting::insert($settingsData);
 
         $user = App\Models\User::query()->create([
-            'firstname' => 'Admin',
-            'surname'   => 'Administrator',
-            'email'     => 'admin@domain.test',
-            'password'  => 'password',
+            'firstname'    => 'Admin',
+            'surname'      => 'Administrator',
+            'email'        => 'admin@domain.test',
+            'password'     => 'password',
+            'is_developer' => true,
         ]);
         $team = App\Models\Team::query()->create([
             'name'          => 'Main Team',
@@ -30,7 +31,8 @@ return new class extends Migration
             'user_id'       => $user->id,
         ]);
         $team->users()->attach($team, ['role' => 'administrator']);
-        $user->current_team_id = $team->id;
+        $user->current_team_id   = $team->id;
+        $user->email_verified_at = now();
         $user->save();
     }
 };
