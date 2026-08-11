@@ -2,6 +2,9 @@
 
 # Genealogy
 
+This repository contains modifications and customizations made to the original project <a href="https://github.com/MGeurts/genealogy" target="_blank">Genealogy</a> by <a href="https://github.com/MGeurts" target="_blank">Kreaweb</a>.
+If you are looking for support, please ask on the main repository.
+
 ![](https://img.shields.io/badge/PHP-8.4-informational?style=flat&logo=php&color=4f5b93)
 ![](https://img.shields.io/badge/Laravel-13-informational?style=flat&logo=laravel&color=ef3b2d)
 ![](https://img.shields.io/badge/Alpine.js-3-informational?style=flat&logo=Alpine.js&color=8BC0D0)

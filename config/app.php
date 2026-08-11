@@ -84,6 +84,7 @@ return [
 
     // add all available translations here, after providing the needed translation files in /lang/XX/
     'available_locales' => [
+        'Afrikaans'        => 'af',         // Afrikaans
         'Deutsch'          => 'de',         // German
         'English'          => 'en',         // English
         'Español'          => 'es',         // Spanish

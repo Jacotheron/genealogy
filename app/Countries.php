@@ -10,6 +10,7 @@ final class Countries
 {
     // Mapping of locales to country directory names
     private const array LOCALE_TO_COUNTRY = [
+        'af' => 'af',
         'de' => 'de',
         'en' => 'en',
         'es' => 'es',
