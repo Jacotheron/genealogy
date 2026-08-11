@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 return [
-    'role_administrator_name'        => 'Administrator',
-    'role_administrator_description' => 'Administrators can perform any action and manage the application.',
+    'role_administrator_name'        => 'Administrateur',
+    'role_administrator_description' => 'Administrateurs kan enige aksie doen en die stelsel bestuur.',
 
-    'role_manager_name'        => 'Manager',
-    'role_manager_description' => 'Managers can perform any action on people.',
+    'role_manager_name'        => 'Bestuurder',
+    'role_manager_description' => 'Bestuurders kan enige aksie op die persone in die stamboom doen.',
 
-    'role_editor_name'        => 'Editor',
-    'role_editor_description' => 'Editors have the ability to create, read and update people.',
+    'role_editor_name'        => 'Redakteur',
+    'role_editor_description' => 'Redakteurs het die vermoeë om persone te skep, sien en wysig.',
 
-    'role_member_name'        => 'Member',
-    'role_member_description' => 'Members have the ability to read people.',
+    'role_member_name'        => 'Lid',
+    'role_member_description' => 'Lede het die vermoeë om slegs persone te sien.',
 ];

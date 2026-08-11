@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 return [
-    'age'                   => 'Age',
-    'birthday'              => 'Birthday',
-    'birthdays'             => 'Birthdays',
-    'upcoming_birthdays'    => 'Upcoming birthdays',
-    'upcoming_months'       => 'Upcoming birthdays in the next :months months.',
-    'no_upcoming_birthdays' => 'No upcoming birthdays in the next :months months.',
+    'age'                   => 'Ouderdom',
+    'birthday'              => 'Verjaarsdag',
+    'birthdays'             => 'Verjaarsdae',
+    'upcoming_birthdays'    => 'Opkomende verjaarsdae',
+    'upcoming_months'       => 'Opkomende verjaarsdae in die volgende :months maande.',
+    'no_upcoming_birthdays' => 'Geen opkomende verjaarsdae in die volgende :months maande.',
     'in'                    => 'in',
-    'years'                 => '[0,1] year|[2,*] years',
-    'days'                  => '[0,1] day|[2,*] days',
+    'years'                 => '[0,1] jaar|[2,*] jare',
+    'days'                  => '[0,1] dag|[2,*] dae',
 ];

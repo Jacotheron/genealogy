@@ -95,6 +95,7 @@
                     <p>
                         <x-ts-icon icon="tabler.hearts" class="inline-block size-5 text-emerald-600" />
                         {{ $couple->date_start ? $couple->date_start->timezone(session('timezone') ?? 'UTC')->isoFormat('LL') : '??' }}
+                        {!! isset($couple->age) ? '&nbsp;&mdash;&nbsp;'.$couple->age . ' ' . trans_choice('person.years', $person->age) : '&nbsp;' !!}
 
                         @if ($couple->date_end or $couple->has_ended)
                             <br />
@@ -104,6 +105,7 @@
                             />
                             {{ $couple->date_end ? $couple->date_end->timezone(session('timezone') ?? 'UTC')->isoFormat('LL') : '??' }}
                         @endif
+                        <br />
                     </p>
                 </div>
             </div>

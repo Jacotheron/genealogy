@@ -15,13 +15,13 @@ return [
     |
     */
 
-    'previous' => '&laquo; Previous',
-    'next'     => 'Next &raquo;',
+    'previous' => '&laquo; Vorige',
+    'next'     => 'Volgende &raquo;',
 
-    'showing' => 'Showing',
-    'to'      => 'to',
-    'of'      => 'of',
-    'results' => 'results',
+    'showing' => 'Vertoon',
+    'to'      => 'tot',
+    'of'      => 'van',
+    'results' => 'resultate',
 
-    'per_page' => 'Per page',
+    'per_page' => 'Per Bladsy',
 ];

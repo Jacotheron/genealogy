@@ -49,11 +49,11 @@
                     />
                 </td>
             </tr>
-            <tr class="align-top">
-                <td colspan="2">&nbsp;</td>
-                <td>{{ __('person.gender') }} :</td>
-                <td class="max-w-sm wrap-break-word">{{ $person->gender ? $person->gender->name : '' }}</td>
-            </tr>
+{{--            <tr class="align-top">--}}
+{{--                <td colspan="2">&nbsp;</td>--}}
+{{--                <td>{{ __('person.gender') }} :</td>--}}
+{{--                <td class="max-w-sm wrap-break-word">{{ $person->gender ? $person->gender->name : '' }}</td>--}}
+{{--            </tr>--}}
 
             {{-- birth --}}
             <tr>

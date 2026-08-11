@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'af'),
 
     // add all available translations here, after providing the needed translation files in /lang/XX/
     'available_locales' => [

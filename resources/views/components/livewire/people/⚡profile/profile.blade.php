@@ -101,7 +101,7 @@
                     <td class="max-w-sm pl-2 wrap-break-word">{{ $person->nickname }}</td>
                 </tr>
 
-                <tr class="align-top">
+                <tr class="border-b-2 align-top">
                     <td class="border-r-2 pr-2">{{ __('person.sex') }} ({{ __('person.biological') }})</td>
                     <td class="pl-2">
                         {{ $person->sex === 'm' ? __('app.male') : __('app.female') }}
@@ -111,10 +111,10 @@
                         />
                     </td>
                 </tr>
-                <tr class="border-b-2 align-top">
-                    <td class="border-r-2 pr-2">{{ __('person.gender') }}</td>
-                    <td class="max-w-sm pl-2 wrap-break-word">{{ $person->gender ? $person->gender->name : '' }}</td>
-                </tr>
+{{--                <tr class="align-top">--}}
+{{--                    <td class="border-r-2 pr-2">{{ __('person.gender') }}</td>--}}
+{{--                    <td class="max-w-sm pl-2 wrap-break-word">{{ $person->gender ? $person->gender->name : '' }}</td>--}}
+{{--                </tr>--}}
 
                 <tr class="align-top">
                     <td class="border-r-2 pr-2">{{ __('person.dob') }}</td>

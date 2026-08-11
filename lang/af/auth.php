@@ -15,74 +15,74 @@ return [
     |
     */
 
-    'agree'              => 'I agree to the :terms_of_service and :privacy_policy',
-    'already_registered' => 'Already registered',
+    'agree'              => 'Ek stem in met die :terms_of_service en :privacy_policy',
+    'already_registered' => 'Alreeds geregistreer',
 
-    'back' => 'Back',
+    'back' => 'Terug',
 
-    'change_password'         => 'Change Password',
-    'change_password_success' => 'Your password has changed',
-    'change_password_error'   => 'Uh-oh, change password failed',
+    'change_password'         => 'Verander Wagwoord',
+    'change_password_success' => 'U wagwoord is verander',
+    'change_password_error'   => 'Oppas, die wagwoord kon nie verander word nie',
 
-    'developer' => 'Developer',
+    'developer' => 'Ontwikkelaar',
 
-    'email' => 'Email',
+    'email' => 'E-pos',
 
-    'forgot_password'           => 'Forgot Password?',
-    'forgot_password_message'   => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
-    'email_password_reset_link' => 'Send Link',
+    'forgot_password'           => 'Wagwoord vergeet?',
+    'forgot_password_message'   => 'U waggwoord vergeet? Geen probleem. Voeg u e-pos adres in, en ons stuur \'n skakel wat u kan gebruik om \'n nuwe wagwoord op te stel.',
+    'email_password_reset_link' => 'Stuur Skakel',
 
-    'guest' => 'Guest',
+    'guest' => 'Gas',
 
-    'have_an_account' => 'I have an Account',
+    'have_an_account' => 'Ek het \'n rekening',
 
-    'invitation_accepted' => 'Great! You have accepted the invitation to join team :team.',
+    'invitation_accepted' => 'Baie goed! U het die uitnodiging aanvaar om by die :team span aan te sluit.',
 
-    'login'  => 'Login',
-    'logout' => 'Logout',
+    'login'  => 'Aanteken',
+    'logout' => 'Uitteken',
 
-    'need_account'              => 'Need an Account?',
-    'new_password'              => 'New Password',
-    'new_password_confirmation' => 'Confirm New Password',
+    'need_account'              => 'Benodig \'n Rekening?',
+    'new_password'              => 'Nuwe Wagwoord',
+    'new_password_confirmation' => 'Bevestig Nuwe Wagwoord',
 
-    'old_password' => 'Old Password',
-    'or'           => 'or',
+    'old_password' => 'Ou Wagwoord',
+    'or'           => 'of',
 
-    'password'              => 'Password',
-    'password_confirmation' => 'Repeat Password',
-    'permissions'           => 'Permisssions',
+    'password'              => 'Wagwoord',
+    'password_confirmation' => 'Bevestig Wagwoord',
+    'permissions'           => 'Toegang',
 
-    'register'       => 'Register',
-    'remember_me'    => 'Remember me',
-    'reset_password' => 'Reset Password',
-    'role'           => 'Role',
+    'register'       => 'Registreer',
+    'remember_me'    => 'Onthou My',
+    'reset_password' => 'Herstel Wagwoord',
+    'role'           => 'Rol',
 
-    'send_reset_password_link' => 'Send Reset Password Link',
+    'send_reset_password_link' => 'Stuur Wagwoord Herstel Skakel',
 
-    'team'    => 'team',
-    'to_join' => 'to join',
+    'team'    => 'span',
+    'to_join' => 'om by aan te sluit',
 
     '2fa'                       => '2FA',
-    '2_factor_authentification' => 'Two Factor Authentifacation',
-    'confirm_code'              => 'Please confirm access to your account by entering the authentication code provided by your authenticator application.',
-    'confirm_recovery_code'     => 'Please confirm access to your account by entering one of your emergency recovery codes.',
-    'code'                      => 'Code',
-    'recovery_code'             => 'Recovery Code',
-    'use_recovery_code'         => 'Use a recovery code',
-    'use_authentification_code' => 'Use an authentication code',
+    '2_factor_authentification' => '2 Faktor Bevestiging',
+    'confirm_code'              => 'Bevestig asseblief toegang tot u rekening deur die kode wat u Authenticator app verskaf, hier in te voer.',
+    'confirm_recovery_code'     => 'Bevestig asseblief toegang tot u rekening deur een van die nood herwinnings kodes hier in te voer.',
+    'code'                      => 'Kode',
+    'recovery_code'             => 'Herwinning Kode',
+    'use_recovery_code'         => 'Gebruik \'n herwinning kode',
+    'use_authentification_code' => 'Gebruik \'n Authenticator kode',
 
-    'confirm_password'         => 'Confirm Password',
-    'confirm_password_message' => 'For your security, please confirm your password to continue.',
-    'secure_area'              => 'This is a secure area of the application. Please confirm your password before continuing.',
-    'cancel'                   => 'Cancel',
-    'confirm'                  => 'Confirm',
+    'confirm_password'         => 'Bevestig Wagwoord',
+    'confirm_password_message' => 'Vir u veiligheid, bevestig asseblief u wagwoord om voort te gaan.',
+    'secure_area'              => 'Hierdie is \'n veilige area van die stelsel. Bevestig asseblief u wagwoord om voort te gaan.',
+    'cancel'                   => 'Kanselleer',
+    'confirm'                  => 'Bevestig',
 
-    'verify_email' => 'Before continuing, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.',
-    'link_send'    => 'A new verification link has been sent to the email address you provided in your profile settings.',
-    'resend'       => 'Resend Verification Email',
-    'edit_profile' => 'Edit Profile',
+    'verify_email' => 'Voordat u voortgaan, kan u asseblief u e-pos adres bevestig deur die skakel te kliek op die e-pos wat ons aan u gestuur het? Indien u nie die e-pos ontvang het nie, kan ons weer stuur.',
+    'link_send'    => '\'n Nuwe bevestiging skakel is gestuur na die e-pos adres in u profiel verstellings.',
+    'resend'       => 'Stuur Bevestiging E-pos Weer',
+    'edit_profile' => 'Wysig Profiel',
 
-    'no_permissions' => 'You do not have any permissions.',
-    'role_unknown'   => 'Role is unknown.',
+    'no_permissions' => 'U het nie enige toegang nie.',
+    'role_unknown'   => 'Rol is onbekend.',
 
 ];

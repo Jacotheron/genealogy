@@ -209,6 +209,26 @@ final class Couple extends Model
         });
     }
 
+    /** @return Attribute<?int, never> */
+    protected function age(): Attribute
+    {
+        return Attribute::make(get: function (): ?int {
+            if ($this->date_start) {
+                if ($this->date_end) {
+                    // deceased based on date start & date end
+                    $age = (int) Carbon::parse($this->date_start)->diffInYears($this->date_end);
+                } else {
+                    // still ongoing
+                    $age = (int) Carbon::parse($this->date_start)->diffInYears();
+                }
+            } else {
+                $age = null;
+            }
+
+            return $age !== null && $age >= 0 ? $age : null;
+        });
+    }
+
     protected function casts(): array
     {
         return [

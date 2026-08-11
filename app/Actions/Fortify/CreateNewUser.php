@@ -35,7 +35,7 @@ final class CreateNewUser implements CreatesNewUsers
             'language'  => ['required', Rule::in(config('app.available_locales'))],
             'timezone'  => ['required', Rule::in(timezone_identifiers_list())],
             'password'  => $this->passwordRules(),
-            'terms'     => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'terms'     => ['accepted', 'required'],
             'token'     => ['required', 'string'],
         ])->validate();
 

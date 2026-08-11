@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 return [
-    'couple'  => 'Couple',
-    'couples' => 'Couples',
+    'couple'  => 'Paartjie',
+    'couples' => 'Paartjies',
 
-    'date_end'   => 'End date',
-    'date_start' => 'Start date',
+    'date_end'   => 'Eind Datum',
+    'date_start' => 'Begin Datum',
 
-    'has_ended' => 'Ended',
+    'has_ended' => 'Beëindig',
 
-    'is_married' => 'Marriage',
+    'is_married' => 'Huwelik',
 
-    'partner'    => 'Partner',
-    'person1_id' => 'First person',
-    'person2_id' => 'Second person',
+    'partner'    => 'Vennoot',
+    'person1_id' => 'Eerste Persoon',
+    'person2_id' => 'Tweede Persoon',
 
-    'team_id' => 'Team',
+    'team_id' => 'Span',
 
-    'overlap'              => 'Relationship overlap detected!',
-    'required_if_date_end' => 'The relationship must be marked as ended when an end date is set.',
+    'overlap'              => 'Verhouding ourvleueling gevind!',
+    'required_if_date_end' => 'Die verhouding moet as beëindig gemerk word wanneer die eind datum is opgestel is.',
 ];

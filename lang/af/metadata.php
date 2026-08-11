@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'address' => 'Address',
+    'address' => 'Adres',
 
-    'location_name' => 'Location name',
-    'latitude'      => 'Latitude',
-    'longitude'     => 'Longitude',
+    'location_name' => 'Plek Naam',
+    'latitude'      => 'Breedtegraad',
+    'longitude'     => 'Lengtegraad',
 ];

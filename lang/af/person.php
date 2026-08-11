@@ -81,7 +81,7 @@ return [
     'names'       => 'Name',
     'firstname'   => 'Voornaam',
     'surname'     => 'Van',
-    'birthname'   => 'Geboortenaam',
+    'birthname'   => 'Doopnaam',
     'nickname'    => 'Noemnaam',
     'sex'         => 'Geslag',
     'gender'      => 'Gender identity',
