@@ -16,7 +16,8 @@ new class extends Component
     #[Session]
     public ?string $search = null;
 
-    public int $perpage = 10;
+    #[Session]
+    public int $perpage = 25;
 
     // List of pagination options
     /**

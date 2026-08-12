@@ -122,9 +122,9 @@ return [
 
     'people_search'             => 'Soek persone in <span class="text-emerald-600"><strong>:scope</strong></span></span>',
     'people_search_placeholder' => 'Voer \'n naam in ...',
-    'people_search_tip'         => 'Soek mense volgens van, voornaam, doopname or noemnaam.',
-    'people_found'              => '<span class="text-emerald-600"><strong>:found</strong></span> gevind met sleutelwoord <span class="text-emerald-600"><strong>:keyword</strong></span> van <span class="text-emerald-600"><strong>:total</strong></span> beskikbaar in <span class="text-emerald-600"><strong>:scope</strong></span>',
-    'people_available'          => '<span class="text-emerald-600"><strong>:total</strong></span> beskikbaar in <span class="text-emerald-600"><strong>:scope</strong></span></span>',
+    'people_search_tip'         => 'Soek mense volgens van, voornaam of doopname.',
+    'people_found'              => '<span class="text-emerald-600"><strong>:found</strong></span> persone met sleutelwoord <span class="text-emerald-600"><strong>:keyword</strong></span> van <span class="text-emerald-600"><strong>:total</strong></span> beskikbaar in <span class="text-emerald-600"><strong>:scope</strong></span>',
+    'people_available'          => '<span class="text-emerald-600"><strong>:total</strong></span> persone in <span class="text-emerald-600"><strong>:scope</strong></span></span>',
 
     'people_search_help_1' => 'Die stelsel soek vir <b class="text-emerald-600">elke enkele woord</b> in die soekveld binne die  <b class="text-emerald-600">van</b>, <b class="text-emerald-600">voornaam</b>, <b class="text-emerald-600">doopnaam</b> en <b class="text-emerald-600">noemnaam</b>.',
     'people_search_help_2' => 'Begin die soek met <b class="text-emerald-600">%</b> indien u binne die naam wil soek, as voorbeeld : <b class="text-emerald-600">%Jr</b>.<br/>Neem kennis dat die soektogte baie stadiger is.',

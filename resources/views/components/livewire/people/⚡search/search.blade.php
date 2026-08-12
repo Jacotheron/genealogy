@@ -1,18 +1,37 @@
 <div>
     {{-- search box section --}}
-    <div class="sticky top-[6.5rem] z-20 bg-gray-100 p-2 dark:bg-gray-900" wire:key="search-box-section">
+    <div class="sticky top-[4.0rem] z-20 bg-gray-100 p-2 dark:bg-gray-900" wire:key="search-box-section">
         <div class="flex flex-col rounded-sm bg-white p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-200">
             {{-- header --}}
             <div class="mb-2 flex flex-wrap text-lg">
+{{--                <div class="max-w-full flex-1 grow">--}}
+{{--                    @if (auth()->user()->is_developer)--}}
+{{--                        {!! __('app.people_search', ['scope' => strtoupper(e(__('team.all_teams')))]) !!}--}}
+{{--                    @else--}}
+{{--                        {!! __('app.people_search', ['scope' => e(auth()->user()->currentTeam->name)]) !!}--}}
+{{--                    @endif--}}
+{{--                </div>--}}
                 <div class="max-w-full flex-1 grow">
-                    @if (auth()->user()->is_developer)
-                        {!! __('app.people_search', ['scope' => strtoupper(e(__('team.all_teams')))]) !!}
+                    @if ($search)
+                        {!!
+                            __('app.people_found', [
+                                'found'   => $people->total(),
+                                'total'   => $people_db,
+                                'scope'   => e(auth()->user()->currentTeam->name),
+                                'keyword' => e($search),
+                            ])
+                        !!}
                     @else
-                        {!! __('app.people_search', ['scope' => e(auth()->user()->currentTeam->name)]) !!}
+                        {!!
+                            __('app.people_available', [
+                                'total' => $people_db,
+                                'scope' => e(auth()->user()->currentTeam->name),
+                            ])
+                        !!}
                     @endif
                 </div>
 
-                <div class="max-w-full flex-1 grow text-center">
+                <div class="max-w-full flex-1 grow text-end">
                     @if (auth()->user()->hasPermission('person:create'))
                         {{-- add button --}}
                         <div class="md:hidden">
@@ -29,26 +48,6 @@
                         </div>
                     @endif
                 </div>
-
-                <div class="max-w-full flex-1 grow text-end">
-                    @if ($search)
-                        {!!
-                            __('app.people_found', [
-                                'found'   => $people->total(),
-                                'total'   => $people_db,
-                                'scope'   => auth()->user()->is_developer ? mb_strtoupper(e(__('team.all_teams'))) : e(auth()->user()->currentTeam->name),
-                                'keyword' => e($search),
-                            ])
-                        !!}
-                    @else
-                        {!!
-                            __('app.people_available', [
-                                'total' => $people_db,
-                                'scope' => auth()->user()->is_developer ? mb_strtoupper(e(__('team.all_teams'))) : e(auth()->user()->currentTeam->name),
-                            ])
-                        !!}
-                    @endif
-                </div>
             </div>
 
             {{-- search box --}}
@@ -59,7 +58,7 @@
                 </div> --}}
 
                 <div
-                    class="w-full flex-1 grow"
+                    class="w-full flex-1 grow mb-2"
                     x-init="
                         $nextTick(() => {
                             $el.querySelector('input')?.focus();
@@ -69,8 +68,8 @@
                     <x-ts-input
                         wire:model.live.debounce.500ms="search"
                         icon="tabler.search"
-                        hint="{{ __('app.people_search_tip') }}"
-                        placeholder="{{ __('app.people_search_placeholder') }}"
+{{--                        hint="{{ __('app.people_search_tip') }}"--}}
+                        placeholder="{{ __('app.people_search_tip') }}"
                         clearable
                     />
                 </div>
@@ -109,7 +108,7 @@
 
     @if (count($people) > 0)
         {{-- people grid --}}
-        <div class="grid grid-cols-1 gap-5 p-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <div class="grid grid-cols-2 gap-5 p-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             @foreach ($people as $person)
                 <livewire:people::person
                     :person="$person"
