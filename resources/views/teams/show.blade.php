@@ -9,7 +9,7 @@
 
             @livewire('teams.team-member-manager', ['team' => $team])
 
-            @if (auth()->user()->ownsTeam($team) and ! $team->personal_team)
+            @if (! $team->personal_team && auth()->user()->ownsTeam($team))
                 <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
@@ -17,7 +17,7 @@
                 </div>
             @endif
 
-            @if (Gate::check('delete', $team) and ! $team->personal_team)
+            @if (! $team->personal_team && Gate::check('delete', $team))
                 <x-section-border />
 
                 <div class="mt-10 sm:mt-0">

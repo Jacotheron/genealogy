@@ -6,7 +6,7 @@
     $person_sequence = $ancestors->firstWhere('id', $person->id)->sequence;
 
     $ancestors_next = $ancestors->where('degree', $level_current)->filter(function ($item) use ($person_sequence): bool {
-        return mb_strpos($item->sequence, $person_sequence) !== false;
+        return str_contains($item->sequence, $person_sequence);
     });
 @endphp
 
@@ -32,15 +32,15 @@
                         />
                     @endif
 
-                    @if ($person->dod or $person->yod)
+                    @if ($person->dod || $person->yod)
                         <div class="ribbon" title="{{ __('person.deceased') }}">&nbsp;</div>
                     @endif
                 </div>
 
                 <figcaption
                     @class([
-                        'text-red-600 dark:text-red-400'         => $person->dod or $person->yod,
-                        'text-primary-500 dark:text-primary-300' => ! ($person->dod or $person->yod),
+                        'text-red-600 dark:text-red-400'         => $person->dod || $person->yod,
+                        'text-primary-500 dark:text-primary-300' => ! ($person->dod || $person->yod),
                         'line-clamp-2 text-xs leading-tight w-24 wrap-break-word',
                     ])
                     title="{{ implode(' ', array_filter([$person->firstname, $person->surname])) }}"

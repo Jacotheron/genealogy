@@ -32,7 +32,7 @@
             </div>
         </x-slot:header>
 
-        @if (! $searchTriggered or $this->similarPersons->isEmpty())
+        @if (! $searchTriggered || $this->similarPersons->isEmpty())
             <p class="text-neutral-400">{{ __('person.no_similar_persons') }}</p>
         @else
             <div class="flex min-w-max flex-col gap-2">

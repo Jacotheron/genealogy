@@ -3,7 +3,7 @@
         &vert; {{ __('person.descendants') }}
     @endsection
 
-    <div class="md:max-w-sm md:min-w-max">
+    <div class="md:min-w-max">
         <div class="overflow-x-auto">
             <div class="flex min-w-xs flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50 print:break-before-page">
                 <div class="h-14 min-h-min rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">

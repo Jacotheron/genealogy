@@ -13,8 +13,8 @@ return [
     'family'  => 'Familie',
     'profile' => 'Profiel',
 
-    'partner'  => 'Venoot',
-    'partners' => 'Venote',
+    'partner'  => 'Verhouding',
+    'partners' => 'Verhoudings',
 
     'children'      => 'Kinders',
     'parents'       => 'Ouers',

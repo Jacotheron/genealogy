@@ -65,7 +65,7 @@
                 @endif
 
                 @foreach (range(0, count($images) - 1) as $i)
-                    @if ($i >= $selected - 1 and $i <= $selected + 1)
+                    @if ($i >= $selected - 1 && $i <= $selected + 1)
                         @if ($i === $selected)
                             <span class="relative -ml-px inline-flex cursor-default items-center border border-gray-300 bg-yellow-500 px-4 py-2 text-sm leading-5 font-medium text-gray-500 select-none dark:bg-yellow-200">
                                 {{ $i + 1 }}

@@ -3,7 +3,7 @@
         &vert; {{ __('person.ancestors') }}
     @endsection
 
-    <div class="md:max-w-sm md:min-w-max">
+    <div class="md:min-w-max">
         <div class="overflow-x-auto">
             <div>
                 <div class="flex min-w-xs flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50 print:break-before-page">

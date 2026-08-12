@@ -91,7 +91,7 @@
         </div>
     @endif
 
-    @if ($team->teamInvitations->isNotEmpty() and Gate::check('addTeamMember', $team))
+    @if ($team->teamInvitations->isNotEmpty() && Gate::check('addTeamMember', $team))
         <x-section-border />
 
         {{-- team member invitations --}}
@@ -160,7 +160,7 @@
 
                                 <div class="flex items-center">
                                     {{-- manage team member role --}}
-                                    @if (Gate::check('updateTeamMember', $team) and Laravel\Jetstream\Jetstream::hasRoles())
+                                    @if (Gate::check('updateTeamMember', $team) && Laravel\Jetstream\Jetstream::hasRoles())
                                         <x-ts-button
                                             class="ms-3 min-w-28"
                                             wire:click="manageRole('{{ $user->id }}')"

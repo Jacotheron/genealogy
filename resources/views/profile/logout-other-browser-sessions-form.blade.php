@@ -17,7 +17,8 @@
                     <div class="flex items-center">
                         <div>
                             @if ($session->agent->isDesktop())
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                     class="h-8 w-8 text-gray-500">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -25,7 +26,8 @@
                                     />
                                 </svg>
                             @else
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-gray-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                     class="h-8 w-8 text-gray-500">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -37,7 +39,8 @@
 
                         <div class="ms-3">
                             <div class="text-sm text-gray-600">
-                                {{ $session->agent->platform() ? $session->agent->platform() : __('app.unknown') }} - {{ $session->agent->browser() ? $session->agent->browser() : __('app.unknown') }}
+                                {{ $session->agent->platform() ?: __('app.unknown') }}
+                                - {{ $session->agent->browser() ?: __('app.unknown') }}
                             </div>
 
                             <div>
@@ -89,7 +92,7 @@
                         wire:keydown.enter="logoutOtherBrowserSessions"
                     />
 
-                    <x-input-error for="password" class="mt-2" />
+                    <x-input-error for="password" class="mt-2"/>
                 </div>
             </x-slot>
 

@@ -18,7 +18,7 @@
                             </x-ts-dropdown.items>
                         </a>
 
-                        @if (auth()->user()->hasPermission('person:update') and $person->children->count() > 0)
+                        @if ($person->children->count() > 0 && auth()->user()->hasPermission('person:update'))
                             <hr />
 
                             @foreach ($children as $child)
@@ -58,6 +58,7 @@
                     @if (isset($child->type))
                         <x-ts-icon icon="tabler.heart-plus" class="inline-block size-5 text-emerald-600" />
                     @endif
+                    {!! isset($child->age) ? '&nbsp;&mdash;&nbsp;'.$child->age . ' ' . trans_choice('person.years', $child->age) : '&nbsp;' !!}
                 </div>
             </div>
         @endforeach

@@ -8,7 +8,7 @@
                 @endif
             </div>
 
-            @if (auth()->user()->hasPermission('person:update') or auth()->user()->hasPermission('person:delete'))
+            @if (auth()->user()->hasPermission('person:update') || auth()->user()->hasPermission('person:delete'))
                 <div class="max-w-min min-w-max flex-1 grow text-end">
                     <x-ts-dropdown icon="tabler.menu-2" position="bottom-end">
                         @if (auth()->user()->hasPermission('person:update'))
@@ -34,11 +34,10 @@
 
                 <div class="flex-1 grow p-2">
                     <img
-                        class="inline"
+                        class="inline rounded-sm"
                         src="{{ url('img/icons/' . $file_type . '.svg') }}"
                         width="20px"
                         alt="{{ $file['name'] }}"
-                        class="rounded-sm"
                     />
 
                     <x-link href="{{ $file->getUrl() }}" target="_blank" title="{{ __('app.show') }}">

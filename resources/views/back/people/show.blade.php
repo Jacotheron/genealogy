@@ -18,7 +18,7 @@
                 <livewire:people::partners :person="$person" />
                 <livewire:people::children :person="$person" />
                 <livewire:people::siblings :person="$person" />
-                <livewire:people::files :person="$person" />
+{{--                <livewire:people::files :person="$person" />--}}
             </div>
 
             <div class="flex grow flex-col gap-5 overflow-x-auto md:max-w-max">

@@ -46,7 +46,7 @@
 
                 @if ($showingConfirmation)
                     <div class="mt-4">
-                        <x-label for="code" value="{{ __('user.2fa_code') }} :" />
+                        <x-label for="code" value="{{ __('user.2fa_code') }} :"/>
 
                         <x-input
                             id="code"
@@ -60,7 +60,7 @@
                             wire:keydown.enter="confirmTwoFactorAuthentication"
                         />
 
-                        <x-input-error for="code" class="mt-2" />
+                        <x-input-error for="code" class="mt-2"/>
                     </div>
                 @endif
             @endif
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="mt-4 grid max-w-xl gap-1 rounded-sm bg-gray-100 p-4 font-mono text-sm">
-                    @foreach (json_decode(decrypt($this->user->two_factor_recovery_codes), true) as $code)
+                    @foreach (json_decode(decrypt($this->user->two_factor_recovery_codes), true, 512, JSON_THROW_ON_ERROR) as $code)
                         <div>{{ $code }}</div>
                     @endforeach
                 </div>

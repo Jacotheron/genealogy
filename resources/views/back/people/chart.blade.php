@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="basis-1/5 items-center border p-2 text-center">
-                    @if ($person->father and $person->father->father)
+                    @if ($person->father && $person->father->father)
                         <x-link
                             href="/people/{{ $person->father->father->id }}/chart"
                             @class(['text-red-600 dark:text-red-400' => $person->father->father->isDeceased()])
@@ -43,7 +43,7 @@
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
-                    @if ($person->father and $person->father->mother)
+                    @if ($person->father && $person->father->mother)
                         <x-link
                             href="/people/{{ $person->father->mother->id }}/chart"
                             @class(['text-red-600 dark:text-red-400' => $person->father->mother->isDeceased()])
@@ -59,7 +59,7 @@
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
-                    @if ($person->mother and $person->mother->father)
+                    @if ($person->mother && $person->mother->father)
                         <x-link
                             href="/people/{{ $person->mother->father->id }}/chart"
                             @class(['text-red-600 dark:text-red-400' => $person->mother->father->isDeceased()])
@@ -75,7 +75,7 @@
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
-                    @if ($person->mother and $person->mother->mother)
+                    @if ($person->mother && $person->mother->mother)
                         <x-link
                             href="/people/{{ $person->mother->mother->id }}/chart"
                             @class(['text-red-600 dark:text-red-400' => $person->mother->mother->isDeceased()])

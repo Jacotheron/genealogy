@@ -6,28 +6,16 @@
 ])
 
 @php
-    switch ($align) {
-        case 'left':
-            $alignmentClasses = 'origin-top-left left-0';
-            break;
-        case 'top':
-            $alignmentClasses = 'origin-top';
-            break;
-        case 'none':
-        case 'false':
-            $alignmentClasses = '';
-            break;
-        case 'right':
-        default:
-            $alignmentClasses = 'origin-top-right right-0';
-            break;
-    }
+$alignmentClasses = match ($align) {
+    'left' => 'origin-top-left left-0',
+    'top' => 'origin-top',
+    'none', 'false' => '',
+    default => 'origin-top-right right-0',
+};
 
-    switch ($width) {
-        case '48':
-            $width = 'w-48';
-            break;
-    }
+if ($width === '48') {
+    $width = 'w-48';
+}
 @endphp
 
 <div class="relative" x-data="{ open: false }" @click.away="open = false" @close.stop="open = false">

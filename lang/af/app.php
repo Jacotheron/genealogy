@@ -21,7 +21,7 @@ return [
     'filter'            => 'Filtrasie',
     'api_tokens'        => 'API tokens',
     'attention'         => 'Aandag',
-    'circa'             => 'circa',
+    'circa'             => 'rondom',
     'contact'           => 'Kontak',
     'datasheet'         => 'Data Dokument',
     'date'              => 'Datum',

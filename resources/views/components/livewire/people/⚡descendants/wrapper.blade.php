@@ -8,7 +8,7 @@
     </div>
 
     <div class="w-full space-y-5 p-2">
-        <div class="md:max-w-sm md:min-w-max">
+        <div class="md:min-w-max">
             <div class="overflow-x-auto">
                 <livewire:people::descendants :person="$person" />
             </div>

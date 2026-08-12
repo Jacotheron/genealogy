@@ -24,6 +24,7 @@
                     class="inline-block size-5"
                 />
                 <span class="text-yellow-500">{{ $sibling->type }}</span>
+                {!! isset($sibling->age) ? '&nbsp;&mdash;&nbsp;'.$sibling->age . ' ' . trans_choice('person.years', $sibling->age) : '&nbsp;' !!}
             </p>
         @endforeach
     @else

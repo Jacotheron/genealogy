@@ -108,7 +108,7 @@
                         @endif
 
                         @foreach (range(1, $paginator->lastPage()) as $i)
-                            @if ($i >= $paginator->currentPage() - 1 and $i <= $paginator->currentPage() + 1)
+                            @if ($i >= $paginator->currentPage() - 1 && $i <= $paginator->currentPage() + 1)
                                 @if ($i === $paginator->currentPage())
                                     <span aria-current="page">
                                         <span class="relative -ml-px inline-flex cursor-default items-center border border-gray-300 bg-yellow-500 px-4 py-2 text-sm leading-5 font-medium text-gray-500 select-none dark:bg-yellow-200">

@@ -103,7 +103,7 @@
             />
             <x-input-error for="email" class="mt-2" />
 
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) and ! $this->user->hasVerifiedEmail())
+            @if (! $this->user->hasVerifiedEmail() && Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">
                     {{ __('user.email_unverified') }}
 

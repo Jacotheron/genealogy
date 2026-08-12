@@ -75,7 +75,7 @@
                             <x-ts-card>
                                 <x-slot:header>
                                     <div class="p-4">
-                                        @if (($log['subject_type'] === 'Person' or $log['subject_type'] === 'PersonMetadata') and $log['event'] !== 'DELETED')
+                                        @if (($log['subject_type'] === 'Person' || $log['subject_type'] === 'PersonMetadata') && $log['event'] !== 'DELETED')
                                             {{ $log['description'] }} :
                                             <x-ts-link href="{{ url('people/' . $log['subject_id']) }}">
                                                 {{ __('person.person') }}
