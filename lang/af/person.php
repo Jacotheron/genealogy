@@ -50,7 +50,7 @@ return [
     'add_mother'                     => 'Voeg Moeder By',
     'add_new_person_as_mother'       => 'Skep nuwe persoon as Moeder',
     'add_existing_person_as_mother'  => 'Kies bestaande persoon as Moeder',
-    'add_child'                      => 'Vieg Kind By',
+    'add_child'                      => 'Voeg Kind By',
     'add_new_person_as_child'        => 'Skep nuwe persoon as Kind',
     'add_existing_person_as_child'   => 'Kies bestaande persoon as Kind',
     'add_person'                     => 'Voeg Persoon By',
