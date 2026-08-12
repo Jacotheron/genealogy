@@ -28,9 +28,9 @@ final class RemoveTeamMember implements RemovesTeamMembers
         $team->removeUser($teamMember);
 
         // set personal team as current team
-        $teamMember->forceFill([
-            'current_team_id' => $teamMember->personalTeam()->id,
-        ])->save();
+        //        $teamMember->forceFill([
+        //            'current_team_id' => $teamMember->personalTeam()->id,
+        //        ])->save();
 
         TeamMemberRemoved::dispatch($team, $teamMember);
 

@@ -73,7 +73,7 @@ new class extends Component implements HasActions, HasSchemas, HasTable
                 TextColumn::make('team_personal')
                     ->label(__('team.team_personal'))
                     ->verticallyAlignStart()
-                    ->getStateUsing(fn (User $record) => $record->personalTeam()->name),
+                    ->getStateUsing(fn (User $record) => $record->personalTeam()?->name),
                 TextColumn::make('teams')
                     ->label(__('team.teams'))
                     ->getStateUsing(fn (User $record): string => implode('<br/>', $record->allTeams()->where('personal_team', false)->pluck(['name'])->toArray()))
