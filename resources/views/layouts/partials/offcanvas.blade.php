@@ -126,6 +126,9 @@
                 <x-nav-link-responsive href="{{ url('log-viewer') }}" target="_blank">
                     {{ __('app.log_viewer') }}
                 </x-nav-link-responsive>
+                <x-nav-link-responsive href="{{ url('pulse') }}" target="_blank">
+                    Pulse
+                </x-nav-link-responsive>
 
                 <x-hr.narrow />
                 <x-nav-link-responsive
