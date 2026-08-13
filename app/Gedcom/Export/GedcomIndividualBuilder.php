@@ -6,6 +6,7 @@ namespace App\Gedcom\Export;
 
 use App\Models\Person;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Collection;
 
 // ==============================================================================
@@ -81,7 +82,7 @@ class GedcomIndividualBuilder
         GedcomMediaBuilder $mediaBuilder
     ): string {
         $lines   = [];
-        $lines[] = "0 @I{$person->id}@ INDI";
+        $lines[] = "0 @I$person->id@ INDI";
 
         // Core information
         $lines = array_merge($lines, $this->buildNameFields($person));
@@ -119,17 +120,17 @@ class GedcomIndividualBuilder
     {
         $lines = [];
 
-        $given = mb_trim((string) ($person->firstname ?? ''));
-        $surn  = mb_trim((string) ($person->surname ?? ''));
+        $given = mb_trim($person->firstname ?? '');
+        $surn  = mb_trim($person->surname ?? '');
 
         // Primary NAME
-        $lines[] = '1 NAME ' . ($given !== '' || $surn !== '' ? "{$given} /{$surn}/" : '/ /');
+        $lines[] = '1 NAME ' . ($given !== '' || $surn !== '' ? "$given /$surn/" : '/ /');
 
         if ($given !== '') {
-            $lines[] = "2 GIVN {$given}";
+            $lines[] = "2 GIVN $given";
         }
         if ($surn !== '') {
-            $lines[] = "2 SURN {$surn}";
+            $lines[] = "2 SURN $surn";
         }
         if (! empty($person->nickname)) {
             $lines[] = '2 NICK ' . $this->formatter->oneLine((string) $person->nickname);
@@ -139,14 +140,14 @@ class GedcomIndividualBuilder
         if (! empty($person->birthname)) {
             $birthSurn = mb_trim((string) $person->birthname);
 
-            $lines[] = '1 NAME ' . ($given !== '' || $birthSurn !== '' ? "{$given} /{$birthSurn}/" : '/ /');
+            $lines[] = '1 NAME ' . ($given !== '' || $birthSurn !== '' ? "$given /$birthSurn/" : '/ /');
             $lines[] = '2 TYPE birth';
 
             if ($given !== '') {
-                $lines[] = "2 GIVN {$given}";
+                $lines[] = "2 GIVN $given";
             }
             if ($birthSurn !== '') {
-                $lines[] = "2 SURN {$birthSurn}";
+                $lines[] = "2 SURN $birthSurn";
             }
         }
 
@@ -166,9 +167,9 @@ class GedcomIndividualBuilder
     private function buildSexField(Person $person): array
     {
         $lines = [];
-        $sex   = mb_strtoupper((string) ($person->sex ?? ''));
+        $sex   = mb_strtoupper($person->sex ?? '');
         if (in_array($sex, ['M', 'F', 'U'], true)) {
-            $lines[] = "1 SEX {$sex}";
+            $lines[] = "1 SEX $sex";
         }
 
         return $lines;
@@ -196,10 +197,10 @@ class GedcomIndividualBuilder
             // Date of birth
             if ($person->dob) {
                 // Convert string to Carbon if needed
-                $date = $person->dob instanceof \Carbon\CarbonInterface ? $person->dob : Carbon::parse($person->dob);
+                $date = $person->dob instanceof CarbonInterface ? $person->dob : Carbon::parse($person->dob);
 
                 if ($d = $this->formatter->formatGedcomDate($date)) {
-                    $lines[] = "2 DATE {$d}";
+                    $lines[] = "2 DATE $d";
                 }
             } elseif ($person->yob) {
                 $lines[] = '2 DATE ' . (int) $person->yob;
@@ -232,10 +233,10 @@ class GedcomIndividualBuilder
             // Date of death
             if ($person->dod) {
                 // Convert string to Carbon if needed
-                $date = $person->dod instanceof \Carbon\CarbonInterface ? $person->dod : Carbon::parse($person->dod);
+                $date = $person->dod instanceof CarbonInterface ? $person->dod : Carbon::parse($person->dod);
 
                 if ($d = $this->formatter->formatGedcomDate($date)) {
-                    $lines[] = "2 DATE {$d}";
+                    $lines[] = "2 DATE $d";
                 }
             } elseif ($person->yod) {
                 $lines[] = '2 DATE ' . (int) $person->yod;
@@ -321,7 +322,7 @@ class GedcomIndividualBuilder
     {
         $lines = [];
         if (! empty($person->summary)) {
-            $lines = array_merge($lines, $this->formatter->exportMultilineText('NOTE', $person->summary, 1));
+            $lines = array_merge($lines, $this->formatter->exportMultilineText('NOTE', $person->summary));
         }
 
         return $lines;
@@ -345,13 +346,13 @@ class GedcomIndividualBuilder
         // Child in family (FAMC) - find parent family
         $parentFamilyId = $familyBuilder->getPersonParentFamilyId($person);
         if ($parentFamilyId) {
-            $lines[] = "1 FAMC @F{$parentFamilyId}@";
+            $lines[] = "1 FAMC @F$parentFamilyId@";
         }
 
         // Spouse in families (FAMS) - from couples table
         if (! empty($famsMapping[$person->id])) {
             foreach ($famsMapping[$person->id] as $familyId) {
-                $lines[] = "1 FAMS @F{$familyId}@";
+                $lines[] = "1 FAMS @F$familyId@";
             }
         }
 

@@ -14,7 +14,7 @@ final class GenderSeeder extends Seeder
      */
     public function run(): void
     {
-        Gender::insert([
+        Gender::query()->insert([
             ['name' => 'Agender'],
             ['name' => 'Androgyne'],
             ['name' => 'Androgynous'],

@@ -46,7 +46,7 @@ new class extends Component implements HasActions, HasSchemas, HasTable
                 ImageColumn::make('profile_photo_path')
                     ->label(__('user.photo'))
                     ->getStateUsing(fn (User $record) => $record->profile_photo_path ? url('storage/' . $record->profile_photo_path) : url('/img/avatar.png'))
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->label(__('user.name'))
                     ->verticallyAlignStart()
@@ -76,7 +76,10 @@ new class extends Component implements HasActions, HasSchemas, HasTable
                     ->getStateUsing(fn (User $record) => $record->personalTeam()?->name),
                 TextColumn::make('teams')
                     ->label(__('team.teams'))
-                    ->getStateUsing(fn (User $record): string => implode('<br/>', $record->allTeams()->where('personal_team', false)->pluck(['name'])->toArray()))
+                    ->getStateUsing(fn (User $record): string => implode('<br/>', $record->allTeams()
+                        ->where('personal_team', false)
+                        ->pluck(['name'])
+                        ->toArray()))
                     ->verticallyAlignStart()
                     ->html(),
                 TextColumn::make('language')

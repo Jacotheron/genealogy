@@ -75,7 +75,7 @@ new class extends Component
             ->toArray();
 
         rescue(
-            fn () => File::delete(storage_path('app/livewire-tmp/' . $content['temporary_name'])),
+            static fn () => File::delete(storage_path('app/livewire-tmp/' . $content['temporary_name'])),
             report: false
         );
     }
@@ -310,7 +310,7 @@ new class extends Component
         $mimeType     = $file->getMimeType();
         $allowedMimes = array_keys(config('app.upload_file_accept'));
 
-        if (! in_array($mimeType, $allowedMimes)) {
+        if (! in_array($mimeType, $allowedMimes, true)) {
             Log::warning('Invalid MIME type detected in file upload', [
                 'person_id' => $this->person->id,
                 'file'      => $file->getClientOriginalName(),
@@ -325,7 +325,7 @@ new class extends Component
         $extension         = mb_strtolower($file->getClientOriginalExtension());
         $allowedExtensions = config('app.upload_file_validation.extensions');
 
-        if (! in_array($extension, $allowedExtensions)) {
+        if (! in_array($extension, $allowedExtensions, true)) {
             Log::warning('Invalid file extension', [
                 'person_id' => $this->person->id,
                 'file'      => $file->getClientOriginalName(),
@@ -338,7 +338,7 @@ new class extends Component
         // Check 3: Verify file is not executable
         $dangerousExtensions = ['php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phar', 'exe', 'sh', 'bat', 'cmd', 'com', 'scr', 'vbs', 'js', 'jar'];
 
-        if (in_array($extension, $dangerousExtensions)) {
+        if (in_array($extension, $dangerousExtensions, true)) {
             Log::warning('Dangerous file extension detected', [
                 'person_id' => $this->person->id,
                 'file'      => $file->getClientOriginalName(),

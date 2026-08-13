@@ -26,7 +26,7 @@ new class extends Component
     public function mount(): void
     {
         // Fetch settings and map them to the properties
-        $this->settings = Setting::pluck('value', 'key');
+        $this->settings = Setting::query()->pluck('value', 'key');
 
         $this->settingsForm->logAllQueries              = (bool) $this->settings->get('log_all_queries');
         $this->settingsForm->logAllQueriesSlowThreshold = $this->settings->get('log_all_queries_slow_threshold');
@@ -47,7 +47,7 @@ new class extends Component
         ];
 
         foreach ($settings as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            Setting::query()->updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
         // Clear the cache

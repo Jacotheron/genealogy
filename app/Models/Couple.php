@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\CoupleFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,7 +32,7 @@ use Spatie\Activitylog\Support\LogOptions;
  */
 final class Couple extends Model
 {
-    /** @use HasFactory<\Database\Factories\CoupleFactory> */
+    /** @use HasFactory<CoupleFactory> */
     use HasFactory;
 
     use LogsActivity;
@@ -154,7 +155,7 @@ final class Couple extends Model
     #[Override]
     protected static function booted(): void
     {
-        self::addGlobalScope('team', function (Builder $builder): void {
+        self::addGlobalScope('team', static function (Builder $builder): void {
             // Skip if the user is a guest
             if (auth()->guest()) {
                 return;

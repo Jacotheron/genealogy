@@ -50,7 +50,7 @@
                         value="{{ __('person.sex') }} ({{ __('person.biological') }}) : *"
                     />
                     <div class="flex">
-                        <div class="mt-3 mr-4 mb-[0.125rem] inline-block min-h-[1.5rem] pl-[1.5rem]">
+                        <div class="mt-3 mr-4 mb-0.5 inline-block min-h-6 pl-6">
                             <x-ts-radio
                                 color="primary"
                                 wire:model="sex"
@@ -60,7 +60,7 @@
                                 label="{{ __('app.male') }}"
                             />
                         </div>
-                        <div class="mt-3 mr-4 mb-[0.125rem] inline-block min-h-[1.5rem] pl-[1.5rem]">
+                        <div class="mt-3 mr-4 mb-0.5 inline-block min-h-6 pl-6">
                             <x-ts-radio
                                 color="primary"
                                 wire:model="sex"

@@ -1,21 +1,29 @@
+@php use App\Models\Person; @endphp
 @section('title')
     &vert; {{ __('app.family_chart') }}
 @endsection
+@php
+    /**
+     * @var Person $person
+     */
+@endphp
 
 <x-app-layout>
-    <div class="sticky top-[4.0rem] z-20 bg-gray-100 p-2 pb-5 dark:bg-gray-900">
-        <livewire:people::heading :person="$person" />
+    <div class="sticky top-16 z-20 bg-gray-100 p-2 pb-5 dark:bg-gray-900">
+        <livewire:people::heading :person="$person"/>
     </div>
 
     <div class="w-full space-y-5 p-2">
         {{-- chart --}}
-        <div class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
-            <div class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
+        <div
+            class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
+            <div
+                class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
                 <div class="flex flex-wrap items-start justify-center gap-2">
                     <div class="max-w-full min-w-max flex-1 grow">{{ __('app.family_chart') }}</div>
 
                     <div class="max-w-full min-w-max flex-1 grow text-end">
-                        <x-ts-icon icon="tabler.social" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.social" class="inline-block size-5"/>
                     </div>
                 </div>
             </div>
@@ -39,7 +47,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
@@ -55,7 +63,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
@@ -71,7 +79,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
                 <div class="basis-1/5 border p-2 text-center">
@@ -87,7 +95,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
             </div>
@@ -95,7 +103,7 @@
             {{-- uncles/ants & cousins --}}
             <div class="flex flex-row">
                 <div class="basis-1/5 border p-2 text-end font-medium">
-                    {{ trans('person.uncles') }} & {{ trans('person.aunts') }} :<br />
+                    {{ trans('person.uncles') }} & {{ trans('person.aunts') }} :<br/>
                     {{ trans('person.cousins') }} :
                 </div>
 
@@ -195,7 +203,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
                 <div class="basis-2/5 border p-2 text-center">
@@ -211,7 +219,7 @@
                             class="inline-block size-5"
                         />
                     @else
-                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.user-question" class="inline-block size-5"/>
                     @endif
                 </div>
             </div>
@@ -237,7 +245,7 @@
             {{-- children & grandchildren --}}
             <div class="flex flex-row">
                 <div class="basis-1/5 border p-2 text-end font-medium">
-                    {{ trans('person.children') }} :<br />
+                    {{ trans('person.children') }} :<br/>
                     {{ trans('person.grandchildren') }} :
                 </div>
 
@@ -281,7 +289,7 @@
             {{-- siblings & nephews/nieces --}}
             <div class="flex flex-row">
                 <div class="basis-1/5 border p-2 text-end font-medium">
-                    {{ trans('person.siblings') }} :<br />
+                    {{ trans('person.siblings') }} :<br/>
                     {{ trans('person.nephews') }} & {{ trans('person.nieces') }} :
                 </div>
 

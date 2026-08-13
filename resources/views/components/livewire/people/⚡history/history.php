@@ -22,11 +22,13 @@ new class extends Component
     // ------------------------------------------------------------------------------
     public function mount(): void
     {
-        $this->activities = Activity::with('causer')
-            ->where('subject_type', Person::class)->where('subject_id', $this->person->id)
+        $this->activities = Activity::query()
+            ->with('causer')
+            ->where('subject_type', Person::class)
+            ->where('subject_id', $this->person->id)
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn ($record): array => [
+            ->map(fn (Activity $record): array => [
                 'event'      => mb_strtoupper((string) $record->event),
                 'created_at' => Carbon::parse($record->created_at)->timezone(session('timezone') ?? 'UTC')->format('Y-m-d H:i'),
                 'causer'     => $record->causer->name ?? 'Unknown',

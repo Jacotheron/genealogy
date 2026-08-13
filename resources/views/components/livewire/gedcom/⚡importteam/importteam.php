@@ -35,7 +35,7 @@ new class extends Component
 
         // Ensure we have a valid User instance
         if (! $user instanceof User) {
-            throw new Exception('User must be authenticated.');
+            throw new RuntimeException('User must be authenticated.');
         }
 
         $this->user = $user;
@@ -61,7 +61,7 @@ new class extends Component
             // Check file type
             $extension = mb_strtolower($this->file->getClientOriginalExtension());
 
-            if (in_array($extension, ['zip'])) {
+            if ($extension === 'zip') {
                 // Import from ZIP (with media)
                 $tempPath = $this->file->getRealPath();
 
@@ -72,12 +72,12 @@ new class extends Component
 
                 // Handle file_get_contents failure
                 if ($content === false) {
-                    throw new Exception('Failed to read file contents.');
+                    throw new RuntimeException('Failed to read file contents.');
                 }
 
                 // Scan for potentially malicious content
                 if ($this->containsMaliciousContent($content)) {
-                    throw new Exception('File contains potentially dangerous content.');
+                    throw new RuntimeException('File contains potentially dangerous content.');
                 }
 
                 $this->result = $importer->import($content);
@@ -89,7 +89,7 @@ new class extends Component
                 $familiesImported    = $this->result['families_imported'] ?? 0;
                 $teamName            = $this->result['team'] ?? 'team';
 
-                $this->toast()->success('Success', "Imported {$individualsImported} individuals and {$familiesImported} families into {$teamName}.")->send();
+                $this->toast()->success('Success', "Imported $individualsImported individuals and $familiesImported families into $teamName.")->send();
 
                 $this->redirect('/search');
             } else {
@@ -116,7 +116,7 @@ new class extends Component
      */
     protected function rules(): array
     {
-        return $rules = [
+        return [
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             'file'        => ['required', 'file', 'mimes:ged,zip', 'max:51200'],  // 50MB max
@@ -165,20 +165,14 @@ new class extends Component
             '/system\s*\(/i',
         ];
 
-        foreach ($maliciousPatterns as $pattern) {
-            if (preg_match($pattern, $content)) {
-                return true;
-            }
+        if (array_any($maliciousPatterns, fn ($pattern) => preg_match($pattern, $content))) {
+            return true;
         }
 
         // Check for suspiciously long lines (potential buffer overflow attempts)
         $lines = explode("\n", $content);
-        foreach ($lines as $line) {
-            if (mb_strlen($line) > 10000) { // 10KB per line is excessive for GEDCOM
-                return true;
-            }
-        }
 
-        return false;
+        // 10KB per line is excessive for GEDCOM
+        return array_any($lines, fn ($line) => mb_strlen($line) > 10000);
     }
 };

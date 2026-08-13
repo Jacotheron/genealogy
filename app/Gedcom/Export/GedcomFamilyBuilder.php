@@ -81,7 +81,7 @@ class GedcomFamilyBuilder
                 $gedcomFamilies->push($family);
                 $this->parentFamilyMapping[$pairKey] = $couple->id;
 
-                Log::info("Created couple family {$couple->id} for pair {$pairKey}");
+                Log::info("Created couple family $couple->id for pair $pairKey");
             } else {
                 $this->parentFamilyMapping[$pairKey] = $uniquePairs[$pairKey];
             }
@@ -101,7 +101,7 @@ class GedcomFamilyBuilder
 
                 if (isset($this->parentFamilyMapping[$parentKey])) {
                     $familyId = $this->parentFamilyMapping[$parentKey];
-                    Log::info("Person {$person->id} assigned to existing family {$familyId} via parents {$parentKey}");
+                    Log::info("Person $person->id assigned to existing family $familyId via parents $parentKey");
                 } else {
                     // Create parent-only family
                     $familyId                              = $nextParentId++;
@@ -110,13 +110,13 @@ class GedcomFamilyBuilder
                     $parentFamily = $this->createParentFamily($familyId, $person->father_id, $person->mother_id);
 
                     $gedcomFamilies->push($parentFamily);
-                    Log::info("Created parent-only family {$familyId} for person {$person->id} with parents {$parentKey}");
+                    Log::info("Created parent-only family $familyId for person $person->id with parents $parentKey");
                 }
             }
             // Check parents_id
             elseif ($person->parents_id) {
                 $familyId = $person->parents_id;
-                Log::info("Person {$person->id} assigned to family {$familyId} via parents_id");
+                Log::info("Person $person->id assigned to family $familyId via parents_id");
             }
 
             // Add person as child to their family
@@ -127,7 +127,7 @@ class GedcomFamilyBuilder
                     $children = $family->children;
                     $children->push($person);
                 } else {
-                    Log::warning("Could not find family {$familyId} for person {$person->id}");
+                    Log::warning("Could not find family $familyId for person $person->id");
                 }
             }
         }
@@ -160,7 +160,7 @@ class GedcomFamilyBuilder
                 }
                 if (property_exists($family, 'id')) {
                     $famsMapping[$family->person1_id][] = $family->id;
-                    Log::info("Person {$family->person1_id} gets FAMS for family {$family->id}");
+                    Log::info("Person $family->person1_id gets FAMS for family $family->id");
                 }
             }
 
@@ -170,7 +170,7 @@ class GedcomFamilyBuilder
                 }
                 if (property_exists($family, 'id')) {
                     $famsMapping[$family->person2_id][] = $family->id;
-                    Log::info("Person {$family->person2_id} gets FAMS for family {$family->id}");
+                    Log::info("Person $family->person2_id gets FAMS for family $family->id");
                 }
             }
         }
@@ -296,15 +296,15 @@ class GedcomFamilyBuilder
             return '';
         }
 
-        $fid   = "@F{$family->id}@";
-        $lines = ["0 {$fid} FAM"];
+        $fid   = "@F$family->id@";
+        $lines = ["0 $fid FAM"];
 
         // Parents/Spouses
         if (property_exists($family, 'person1_id') && $family->person1_id) {
-            $lines[] = "1 HUSB @I{$family->person1_id}@";
+            $lines[] = "1 HUSB @I$family->person1_id@";
         }
         if (property_exists($family, 'person2_id') && $family->person2_id) {
-            $lines[] = "1 WIFE @I{$family->person2_id}@";
+            $lines[] = "1 WIFE @I$family->person2_id@";
         }
 
         // Marriage/relationship information (only for couple type families)
@@ -338,10 +338,8 @@ class GedcomFamilyBuilder
                 if (property_exists($relationship, 'is_married') && $relationship->is_married) {
                     $lines[] = '1 MARR';
 
-                    if (property_exists($relationship, 'date_start') && $relationship->date_start) {
-                        if ($d = $this->formatter->formatGedcomDate($relationship->date_start)) {
-                            $lines[] = "2 DATE {$d}";
-                        }
+                    if (property_exists($relationship, 'date_start') && $relationship->date_start && $d = $this->formatter->formatGedcomDate($relationship->date_start)) {
+                        $lines[] = "2 DATE $d";
                     }
 
                     // If relationship has ended and they were married, add divorce
@@ -351,7 +349,7 @@ class GedcomFamilyBuilder
                         $relationship->date_end) {
                         $lines[] = '1 DIV';
                         if ($d = $this->formatter->formatGedcomDate($relationship->date_end)) {
-                            $lines[] = "2 DATE {$d}";
+                            $lines[] = "2 DATE $d";
                         }
                     }
                 } else {
@@ -359,10 +357,8 @@ class GedcomFamilyBuilder
                     $lines[] = '1 EVEN';
                     $lines[] = '2 TYPE Relationship';
 
-                    if (property_exists($relationship, 'date_start') && $relationship->date_start) {
-                        if ($d = $this->formatter->formatGedcomDate($relationship->date_start)) {
-                            $lines[] = "2 DATE {$d}";
-                        }
+                    if (property_exists($relationship, 'date_start') && $relationship->date_start && $d = $this->formatter->formatGedcomDate($relationship->date_start)) {
+                        $lines[] = "2 DATE $d";
                     }
 
                     // If relationship has ended
@@ -373,7 +369,7 @@ class GedcomFamilyBuilder
                         $lines[] = '1 EVEN';
                         $lines[] = '2 TYPE End of relationship';
                         if ($d = $this->formatter->formatGedcomDate($relationship->date_end)) {
-                            $lines[] = "2 DATE {$d}";
+                            $lines[] = "2 DATE $d";
                         }
                     }
                 }
@@ -398,7 +394,7 @@ class GedcomFamilyBuilder
         // Children are already collected in the family object
         if (property_exists($family, 'children') && $family->children instanceof SupportCollection) {
             foreach ($family->children as $child) {
-                $lines[] = "1 CHIL @I{$child->id}@";
+                $lines[] = "1 CHIL @I$child->id@";
             }
         }
 

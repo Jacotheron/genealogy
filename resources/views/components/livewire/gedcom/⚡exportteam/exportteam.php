@@ -15,7 +15,7 @@ new class extends Component
 {
     use Interactions;
 
-    private const MAX_FILENAME_LENGTH = 100;
+    private const int MAX_FILENAME_LENGTH = 100;
 
     public User $user;
 
@@ -43,7 +43,7 @@ new class extends Component
 
         $this->user = $authUser;
 
-        $this->formats = self::formats();
+        $this->formats = $this->formats();
 
         $currentTeam = $this->user->currentTeam;
 
@@ -84,7 +84,7 @@ new class extends Component
             $this->toast()->success(__('app.download'), __('gedcom.export_succeeded') . ': <br/>' . __('app.downloading'))->send();
 
             // Use FORMATS zip flag to decide download type
-            $formatConfig = collect(self::formats())->firstWhere('value', $this->format);
+            $formatConfig = collect($this->formats())->firstWhere('value', $this->format);
 
             if ($formatConfig['zip'] ?? false) {
                 return $export->downloadZip($gedcom);
@@ -195,7 +195,7 @@ new class extends Component
     private function sanitizeTeamName(string $teamName): string
     {
         // Remove or replace problematic characters
-        $safe = preg_replace('/[^\p{L}\p{N}\-\+\s]/u', '', $teamName) ?? '';
+        $safe = preg_replace('/[^\p{L}\p{N}\-+\s]/u', '', $teamName) ?? '';
 
         // Use slug if original contains non-ASCII characters
         if ($safe !== '' && preg_match('/[^\x00-\x7F]/', $safe)) {
@@ -219,7 +219,7 @@ new class extends Component
 
         // Keep only allowed characters
         $trimmed   = mb_trim($filename);
-        $sanitized = preg_replace('/[^a-z0-9\-\+\_\.]/i', '', $trimmed) ?? '';
+        $sanitized = preg_replace('/[^a-z0-9\-+_.]/i', '', $trimmed) ?? '';
 
         // Truncate if too long
         return mb_substr($sanitized, 0, self::MAX_FILENAME_LENGTH);

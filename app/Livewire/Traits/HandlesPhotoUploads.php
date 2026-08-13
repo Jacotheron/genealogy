@@ -95,7 +95,7 @@ trait HandlesPhotoUploads
         $mimeType     = $file->getMimeType();
         $allowedMimes = array_keys(config('app.upload_photo_accept'));
 
-        if (! in_array($mimeType, $allowedMimes)) {
+        if (! in_array($mimeType, $allowedMimes, true)) {
             Log::warning('Invalid MIME type detected in upload', [
                 'file'    => $file->getClientOriginalName(),
                 'mime'    => $mimeType,
@@ -119,7 +119,7 @@ trait HandlesPhotoUploads
             // Verify the image type matches expected types
             $allowedImageTypes = config('app.upload_photo_validation.image_types');
 
-            if (! in_array($imageInfo[2], $allowedImageTypes)) {
+            if (! in_array($imageInfo[2], $allowedImageTypes, true)) {
                 Log::warning('Image type not allowed', [
                     'file' => $file->getClientOriginalName(),
                     'type' => $imageInfo[2],
@@ -140,7 +140,7 @@ trait HandlesPhotoUploads
         $extension         = mb_strtolower($file->getClientOriginalExtension());
         $allowedExtensions = config('app.upload_photo_validation.extensions');
 
-        if (! in_array($extension, $allowedExtensions)) {
+        if (! in_array($extension, $allowedExtensions, true)) {
             Log::warning('Invalid file extension in upload', [
                 'file'      => $file->getClientOriginalName(),
                 'extension' => $extension,

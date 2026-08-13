@@ -67,7 +67,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="ml-4 flex flex-shrink-0 space-x-2">
+                                        <div class="ml-4 flex shrink-0 space-x-2">
                                             <x-ts-button
                                                 wire:click="openModal({{ $event->id }})"
                                                 color="gray"

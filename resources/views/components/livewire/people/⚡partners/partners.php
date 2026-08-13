@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Traits\AuthorizesPersonActions;
 use App\Models\Couple;
 use App\Models\Person;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use TallStackUi\Traits\Interactions;
@@ -48,17 +49,15 @@ new class extends Component
             ->send();
     }
 
-    /**
-     * @param  array{id: int, name: string}  $couple
-     */
-    public function delete(array $couple): void
+    public function delete(array $couple_data): void
     {
         $this->authorizePermission('couple:delete');
 
-        $couple = Couple::where(function ($q): void {
-            $q->where('person1_id', $this->person->id)
-                ->orWhere('person2_id', $this->person->id);
-        })->findOrFail($couple['id']);
+        $couple = Couple::query()
+            ->where(function (Builder $q): void {
+                $q->where('person1_id', $this->person->id)
+                    ->orWhere('person2_id', $this->person->id);
+            })->findOrFail($couple_data['id']);
 
         $couple->delete();
 

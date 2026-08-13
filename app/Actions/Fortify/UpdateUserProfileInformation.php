@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Container\EntryNotFoundException;
+use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 final class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
@@ -16,6 +19,11 @@ final class UpdateUserProfileInformation implements UpdatesUserProfileInformatio
      * Validate and update the given user's profile information.
      *
      * @param  array<string, mixed>  $input
+     *
+     * @throws EntryNotFoundException
+     * @throws CircularDependencyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function update(User $user, array $input): void
     {
@@ -33,13 +41,12 @@ final class UpdateUserProfileInformation implements UpdatesUserProfileInformatio
         }
 
         /** @phpstan-ignore if.alwaysFalse, instanceof.alwaysFalse, logicalAnd.alwaysFalse */
-        if ($input['email'] !== $user->email and $user instanceof MustVerifyEmail) {
+        if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
                 'firstname' => $input['firstname'] ?? null,
                 'surname'   => $input['surname'],
-                'email'     => $input['email'],
                 'language'  => $input['language'],
                 'timezone'  => $input['timezone'],
             ])->save();

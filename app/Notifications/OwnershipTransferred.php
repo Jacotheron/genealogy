@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Team;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-final class OwnershipTransferred extends Notification
+final class OwnershipTransferred extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      *
-     * @param  \App\Models\Team  $team
+     * @param Team $team
      */
-    public function __construct(public $team) {}
+    public function __construct(public Team $team) {}
 
     /**
      * Get the notification's delivery channels.
@@ -25,7 +27,7 @@ final class OwnershipTransferred extends Notification
      * @param  mixed  $notifiable
      * @return array<int, string>
      */
-    public function via($notifiable): array
+    public function via(mixed $notifiable): array
     {
         return ['mail'];
     }
@@ -36,7 +38,7 @@ final class OwnershipTransferred extends Notification
      * @param  mixed  $notifiable
      * @return MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject(__('team.transferred'))

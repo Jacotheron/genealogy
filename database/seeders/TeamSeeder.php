@@ -16,7 +16,7 @@ final class TeamSeeder extends Seeder
         // -----------------------------------------------------------------------------------
         // preload users in one query
         // -----------------------------------------------------------------------------------
-        $users = User::whereIn('surname', [
+        $users = User::query()->whereIn('surname', [
             'Administrator',
             'Manager',
             'Editor',
@@ -76,7 +76,7 @@ final class TeamSeeder extends Seeder
     {
         $user = Jetstream::findUserByEmailOrFail($email);
 
-        $team = Team::forceCreate([
+        $team = Team::query()->forceCreate([
             'user_id'       => $user->id,
             'name'          => $name,
             'description'   => $description,

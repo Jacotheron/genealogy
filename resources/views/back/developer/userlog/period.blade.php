@@ -4,16 +4,18 @@
 
 <x-app-layout>
     <div class="max-w-7xl grow overflow-x-auto p-2 dark:text-neutral-200">
-        <div class="mb-5 flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
+        <div
+            class="mb-5 flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
             {{-- card header --}}
-            <div class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
+            <div
+                class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
                 <div class="flex flex-wrap items-start justify-center gap-2">
                     <div class="max-w-full min-w-max flex-1 grow">
                         {{ __('userlog.period') }} : {{ __('userlog.week') }} ({{ date('Y') }})
                     </div>
 
                     <div class="max-w-min min-w-max flex-1 grow text-end">
-                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5"/>
                     </div>
                 </div>
             </div>
@@ -26,16 +28,18 @@
             </div>
         </div>
 
-        <div class="mb-5 flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
+        <div
+            class="mb-5 flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
             {{-- card header --}}
-            <div class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
+            <div
+                class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
                 <div class="flex flex-wrap items-start justify-center gap-2">
                     <div class="max-w-full min-w-max flex-1 grow">
                         {{ __('userlog.period') }} : {{ __('userlog.month') }} ({{ date('Y') }})
                     </div>
 
                     <div class="max-w-min min-w-max flex-1 grow text-end">
-                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5"/>
                     </div>
                 </div>
             </div>
@@ -48,16 +52,18 @@
             </div>
         </div>
 
-        <div class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
+        <div
+            class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 dark:text-neutral-50">
             {{-- card header --}}
-            <div class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
+            <div
+                class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
                 <div class="flex flex-wrap items-start justify-center gap-2">
                     <div class="max-w-full min-w-max flex-1 grow">
                         {{ __('userlog.period') }} : {{ __('userlog.year') }}
                     </div>
 
                     <div class="max-w-min min-w-max flex-1 grow text-end">
-                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5" />
+                        <x-ts-icon icon="tabler.chart-bar" class="inline-block size-5"/>
                     </div>
                 </div>
             </div>
@@ -79,11 +85,11 @@
         let chartWeek = new Chart(ctxWeek, {
             type: 'bar',
             data: {
-                labels: @json($statistics_week_labels),
+                labels: @json($statistics_week_labels, JSON_THROW_ON_ERROR),
                 datasets: [
                     {
-                        label: @json($title),
-                        data: @json($statistics_week_values),
+                        label: @json($title, JSON_THROW_ON_ERROR),
+                        data: @json($statistics_week_values, JSON_THROW_ON_ERROR),
                         borderWidth: 1,
                     },
                 ],
@@ -107,11 +113,11 @@
         let chartMonth = new Chart(ctxMonth, {
             type: 'bar',
             data: {
-                labels: @json($statistics_month_labels),
+                labels: @json($statistics_month_labels, JSON_THROW_ON_ERROR),
                 datasets: [
                     {
-                        label: @json($title),
-                        data: @json($statistics_month_values),
+                        label: @json($title, JSON_THROW_ON_ERROR),
+                        data: @json($statistics_month_values, JSON_THROW_ON_ERROR),
                         borderWidth: 1,
                     },
                 ],
@@ -135,11 +141,11 @@
         let chartYear = new Chart(ctxYear, {
             type: 'bar',
             data: {
-                labels: @json($statistics_year_labels),
+                labels: @json($statistics_year_labels, JSON_THROW_ON_ERROR),
                 datasets: [
                     {
-                        label: @json($title),
-                        data: @json($statistics_year_values),
+                        label: @json($title, JSON_THROW_ON_ERROR),
+                        data: @json($statistics_year_values, JSON_THROW_ON_ERROR),
                         borderWidth: 1,
                     },
                 ],

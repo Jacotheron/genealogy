@@ -90,11 +90,11 @@ class GedcomFormatter
      * Format coordinates for GEDCOM output.
      * GEDCOM 7.0 uses specific coordinate format requirements.
      *
-     * @param  string|float  $coordinate  Coordinate value
+     * @param float|string $coordinate  Coordinate value
      * @param  string  $type  'latitude' or 'longitude'
      * @return string Formatted GEDCOM coordinate
      */
-    public function formatGedcomCoordinate($coordinate, string $type): string
+    public function formatGedcomCoordinate(float|string $coordinate, string $type): string
     {
         $coord = (float) $coordinate;
 
@@ -139,7 +139,7 @@ class GedcomFormatter
             $line = $this->sanitizeText($line);
 
             // First line → main tag
-            $lineText = $i === 0 ? "{$level} {$tag} {$line}" : ($level + 1) . ' CONT ' . $line;
+            $lineText = $i === 0 ? "$level $tag $line" : ($level + 1) . ' CONT ' . $line;
 
             // Split long lines > 255 chars using CONC
             while (mb_strlen($lineText) > 255) {

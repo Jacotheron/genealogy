@@ -37,7 +37,7 @@ new class extends Component
     public function mount(): void
     {
         // Count the number of people in the database
-        $this->people_db = Person::count();
+        $this->people_db = Person::query()->count();
     }
 
     // ------------------------------------------------------------------------------

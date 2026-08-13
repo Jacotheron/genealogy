@@ -67,10 +67,10 @@
                     />
                 </div>
 
-                {{-- state --}}
-                <div class="col-span-6 md:col-span-3">
-                    <x-ts-input wire:model="state" id="state" label="{{ __('person.state') }} :" autocomplete="state" />
-                </div>
+{{--                --}}{{-- state --}}
+{{--                <div class="col-span-6 md:col-span-3">--}}
+{{--                    <x-ts-input wire:model="state" id="state" label="{{ __('person.state') }} :" autocomplete="state" />--}}
+{{--                </div>--}}
 
                 {{-- country --}}
                 <div class="col-span-5">

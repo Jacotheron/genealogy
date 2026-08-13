@@ -2,17 +2,17 @@
 
 /* TallStackUI */
 @import '../../vendor/tallstackui/tallstackui/css/v4.css';
+/* Filement 4 (Tables only) */
+@import '../../vendor/filament/schemas/resources/css/index.css';
+@import '../../vendor/filament/actions/resources/css/index.css';
+@import '../../vendor/filament/support/resources/css/index.css';
+@import '../../vendor/filament/forms/resources/css/index.css';
+@import '../../vendor/filament/tables/resources/css/index.css';
 
 /* Tailwind Plugins */
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-/* Filement 4 (Tables only) */
-@import '../../vendor/filament/support/resources/css/index.css';
-@import '../../vendor/filament/actions/resources/css/index.css';
-@import '../../vendor/filament/forms/resources/css/index.css';
-@import '../../vendor/filament/schemas/resources/css/index.css';
-@import '../../vendor/filament/tables/resources/css/index.css';
 
 /* Source files for Tailwind to scan */
 @source '../../vendor/tallstackui/tallstackui/**/*.php';

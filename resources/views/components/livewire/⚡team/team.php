@@ -43,7 +43,6 @@ new class extends Component
     public function paginatedData(): LengthAwarePaginator
     {
         return match ($this->activeTab) {
-            'users'   => $this->getPaginatedUsers(),
             'persons' => $this->getPaginatedPersons(),
             'couples' => $this->getPaginatedCouples(),
             default   => $this->getPaginatedUsers()
@@ -96,8 +95,8 @@ new class extends Component
 
         if ($this->search) {
             $query->where(function ($q): void {
-                $q->where('users.firstname', 'like', "%{$this->search}%")
-                    ->orWhere('users.surname', 'like', "%{$this->search}%");
+                $q->where('users.firstname', 'like', "%$this->search%")
+                    ->orWhere('users.surname', 'like', "%$this->search%");
             });
         }
 
@@ -136,8 +135,8 @@ new class extends Component
 
         if ($this->search) {
             $query->where(function ($q): void {
-                $q->where('firstname', 'like', "%{$this->search}%")
-                    ->orWhere('surname', 'like', "%{$this->search}%");
+                $q->where('firstname', 'like', "%$this->search%")
+                    ->orWhere('surname', 'like', "%$this->search%");
             });
         }
 
@@ -190,10 +189,10 @@ new class extends Component
 
         if ($this->search) {
             $query->where(function ($q): void {
-                $q->where('p1.firstname', 'like', "%{$this->search}%")
-                    ->orWhere('p1.surname', 'like', "%{$this->search}%")
-                    ->orWhere('p2.firstname', 'like', "%{$this->search}%")
-                    ->orWhere('p2.surname', 'like', "%{$this->search}%");
+                $q->where('p1.firstname', 'like', "%$this->search%")
+                    ->orWhere('p1.surname', 'like', "%$this->search%")
+                    ->orWhere('p2.firstname', 'like', "%$this->search%")
+                    ->orWhere('p2.surname', 'like', "%$this->search%");
             });
         }
 

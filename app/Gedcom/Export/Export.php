@@ -31,7 +31,7 @@ class Export
     // --------------------------------------------------------------------------------------
 
     /** @var string Current GEDCOM version being used */
-    private const GEDCOM_VERSION = '7.0.16';
+    private const string GEDCOM_VERSION = '7.0.16';
 
     // --------------------------------------------------------------------------------------
     // PROPERTIES
@@ -159,14 +159,13 @@ class Export
     private function buildGedcom(Collection $individuals, Collection $couples): string
     {
         $submitter   = $this->getSubmitter();
-        $submitterId = $submitter ? "@I{$submitter->id}@" : '@SUB1@';
+        $submitterId = $submitter ? "@I$submitter->id@" : '@SUB1@';
 
         // Build family structures for GEDCOM
         $gedcomFamilies = $this->familyBuilder->buildGedcomFamilies($individuals, $couples);
         $famsMapping    = $this->familyBuilder->buildFamilyMapping($gedcomFamilies);
 
-        $gedcom = '';
-        $gedcom .= $this->headerBuilder->buildHeader($submitterId);
+        $gedcom = $this->headerBuilder->buildHeader($submitterId);
         $gedcom .= $this->headerBuilder->buildSubmitterRecord($submitter);
         $gedcom .= $this->individualBuilder->buildIndividuals($individuals, $famsMapping, $this->familyBuilder, $this->mediaBuilder);
         $gedcom .= $this->familyBuilder->buildFamilies($gedcomFamilies);
@@ -184,7 +183,7 @@ class Export
      */
     private function getSubmitter(): ?User
     {
-        return auth()->user() ?? null;
+        return auth()->user();
     }
 
     /**
@@ -226,7 +225,6 @@ class Export
     private function getExtension(string $format): string
     {
         return match ($format) {
-            'gedcom'          => '.ged',
             'zip', 'zipmedia' => '.zip',
             'gedzip'          => '.gdz',
             default           => '.ged',

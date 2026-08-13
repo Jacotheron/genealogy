@@ -35,7 +35,8 @@ new class extends Component
     {
         $this->form->reset();
 
-        $this->persons = Person::where('id', '!=', $this->person->id)
+        $this->persons = Person::query()
+            ->where('id', '!=', $this->person->id)
             ->whereNull($this->person->sex === 'm' ? 'father_id' : 'mother_id')
             ->youngerThan($this->person->dob, $this->person->yob)
             ->olderThan($this->person->dod, $this->person->yod)
@@ -70,7 +71,7 @@ new class extends Component
      */
     protected function linkExistingChild(int $personId): void
     {
-        $child = Person::findOrFail($personId);
+        $child = Person::query()->findOrFail($personId);
 
         $child->update([
             $this->person->sex === 'm' ? 'father_id' : 'mother_id' => $this->person->id,
@@ -86,7 +87,7 @@ new class extends Component
      */
     protected function createNewChild(array $validated): void
     {
-        $newChild = Person::create(array_merge(
+        $newChild = Person::query()->create(array_merge(
             collect($validated)->only(['firstname', 'surname', 'birthname', 'nickname', 'sex', 'gender_id', 'yob', 'dob', 'pob'])->toArray(),
             [
                 $this->person->sex === 'm' ? 'father_id' : 'mother_id' => $this->person->id,
@@ -113,10 +114,10 @@ new class extends Component
             'form.birthname' => ['nullable', 'string', 'max:255'],
             'form.nickname'  => ['nullable', 'string', 'max:255'],
             'form.sex'       => ['nullable', 'string', 'max:1', 'in:m,f', 'required_without:form.person_id'],
-//            'form.gender_id' => ['nullable', 'integer'],
-            'form.yob'       => ['nullable', 'integer', 'min:1', 'max:' . date('Y')],
-            'form.dob'       => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today'],
-            'form.pob'       => ['nullable', 'string', 'max:255'],
+            //            'form.gender_id' => ['nullable', 'integer'],
+            'form.yob' => ['nullable', 'integer', 'min:1', 'max:' . date('Y')],
+            'form.dob' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today'],
+            'form.pob' => ['nullable', 'string', 'max:255'],
 
             'form.person_id' => ['nullable', 'integer', 'exists:people,id', 'required_without_all:form.surname,form.sex'],
         ], $this->getPhotoUploadRules());
@@ -146,10 +147,10 @@ new class extends Component
             'form.birthname' => __('person.birthname'),
             'form.nickname'  => __('person.nickname'),
             'form.sex'       => __('person.sex'),
-//            'form.gender_id' => __('person.gender'),
-            'form.yob'       => __('person.yob'),
-            'form.dob'       => __('person.dob'),
-            'form.pob'       => __('person.pob'),
+            //            'form.gender_id' => __('person.gender'),
+            'form.yob' => __('person.yob'),
+            'form.dob' => __('person.dob'),
+            'form.pob' => __('person.pob'),
 
             'form.person_id' => __('person.person'),
         ], $this->getPhotoUploadAttributes());

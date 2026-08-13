@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\PersonFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Throwable;
 
 /**
  * @property int $id
@@ -24,7 +26,7 @@ use Spatie\Activitylog\Support\LogOptions;
  */
 final class Team extends JetstreamTeam
 {
-    /** @use HasFactory<\Database\Factories\PersonFactory> */
+    /** @use HasFactory<PersonFactory> */
     use HasFactory;
 
     use LogsActivity;
@@ -126,7 +128,7 @@ final class Team extends JetstreamTeam
     public function delete(): ?bool
     {
         // If user is a developer and this is not a personal team, handle cleanup
-        if (auth()->user()?->isDeveloper() && ! $this->personal_team) {
+        if (! $this->personal_team && auth()->user()?->isDeveloper()) {
             $this->handleCurrentTeamSwitch();
             $this->performDeveloperDelete();
         }
@@ -184,6 +186,9 @@ final class Team extends JetstreamTeam
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function performDeveloperDelete(): void
     {
         DB::transaction(function (): void {

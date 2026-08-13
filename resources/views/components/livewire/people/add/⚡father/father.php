@@ -35,7 +35,8 @@ new class extends Component
 
     public function mount(): void
     {
-        $this->persons = Person::where('id', '!=', $this->person->id)
+        $this->persons = Person::query()
+            ->where('id', '!=', $this->person->id)
             ->where('sex', 'm')
             ->olderThan($this->person->dob, $this->person->yob)
             ->orderBy('firstname')
@@ -83,7 +84,7 @@ new class extends Component
      */
     protected function createNewFather(array $validated): void
     {
-        $newFather = Person::create(array_merge(
+        $newFather = Person::query()->create(array_merge(
             collect($validated)->only(['firstname', 'surname', 'birthname', 'nickname', 'gender_id', 'yob', 'dob', 'pob'])->toArray(),
             [
                 'sex'     => 'm',
@@ -113,10 +114,10 @@ new class extends Component
             'form.surname'   => ['nullable', 'string', 'max:255', 'required_without:form.person_id'],
             'form.birthname' => ['nullable', 'string', 'max:255'],
             'form.nickname'  => ['nullable', 'string', 'max:255'],
-//            'form.gender_id' => ['nullable', 'integer'],
-            'form.yob'       => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
-            'form.dob'       => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
-            'form.pob'       => ['nullable', 'string', 'max:255'],
+            //            'form.gender_id' => ['nullable', 'integer'],
+            'form.yob' => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
+            'form.dob' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
+            'form.pob' => ['nullable', 'string', 'max:255'],
 
             'form.person_id' => ['nullable', 'integer', 'exists:people,id', 'required_without:form.surname'],
         ], $this->getPhotoUploadRules());
@@ -144,10 +145,10 @@ new class extends Component
             'form.surname'   => __('person.surname'),
             'form.birthname' => __('person.birthname'),
             'form.nickname'  => __('person.nickname'),
-//            'form.gender_id' => __('person.gender'),
-            'form.yob'       => __('person.yob'),
-            'form.dob'       => __('person.dob'),
-            'form.pob'       => __('person.pob'),
+            //            'form.gender_id' => __('person.gender'),
+            'form.yob' => __('person.yob'),
+            'form.dob' => __('person.dob'),
+            'form.pob' => __('person.pob'),
 
             'form.person_id' => __('person.person'),
         ], $this->getPhotoUploadAttributes());

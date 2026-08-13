@@ -32,7 +32,7 @@ class GedcomFileHandler
     // --------------------------------------------------------------------------------------
 
     /** @var int Default buffer size for file streaming */
-    private const STREAM_BUFFER_SIZE = 8192;
+    private const int STREAM_BUFFER_SIZE = 8192;
 
     /**
      * Create file handler instance.
@@ -63,7 +63,7 @@ class GedcomFileHandler
     public function downloadGedcom(string $gedcom): StreamedResponse
     {
         return Response::streamDownload(
-            fn () => print ($gedcom),
+            static fn () => print ($gedcom),
             $this->filename,
             $this->getGedcomHeaders()
         );
@@ -170,7 +170,7 @@ class GedcomFileHandler
         $result = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if ($result !== true) {
-            throw new RuntimeException("Failed to create ZIP archive: {$this->getZipErrorMessage($result)} (Code: {$result})");
+            throw new RuntimeException("Failed to create ZIP archive: {$this->getZipErrorMessage($result)} (Code: $result)");
         }
 
         // Verify GEDCOM file exists before adding
@@ -198,10 +198,10 @@ class GedcomFileHandler
                 if ($zip->addFile($diskPath, $archivePath)) {
                     $addedFiles++;
                 } else {
-                    Log::warning("Failed to add media file to ZIP: {$mediaPath}");
+                    Log::warning("Failed to add media file to ZIP: $mediaPath");
                 }
             } else {
-                Log::warning("Media file not found or not readable: {$diskPath}");
+                Log::warning("Media file not found or not readable: $diskPath");
             }
         }
 
@@ -218,7 +218,7 @@ class GedcomFileHandler
             throw new RuntimeException('ZIP file is empty after creation: ' . $zipPath);
         }
 
-        Log::debug("Created ZIP with GEDCOM file and {$addedFiles} media files");
+        Log::debug("Created ZIP with GEDCOM file and $addedFiles media files");
     }
 
     /**
@@ -242,7 +242,7 @@ class GedcomFileHandler
         $result = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if ($result !== true) {
-            throw new RuntimeException("Failed to create ZIP archive: {$this->getZipErrorMessage($result)} (Code: {$result})");
+            throw new RuntimeException("Failed to create ZIP archive: {$this->getZipErrorMessage($result)} (Code: $result)");
         }
 
         // Verify GEDCOM file exists before adding
@@ -285,10 +285,8 @@ class GedcomFileHandler
     {
         $tempDir = Storage::path('temp');
 
-        if (! is_dir($tempDir)) {
-            if (! mkdir($tempDir, 0755, true)) {
-                throw new RuntimeException('Unable to create temp directory: ' . $tempDir);
-            }
+        if (! is_dir($tempDir) && ! mkdir($tempDir, 0755, true) && ! is_dir($tempDir)) {
+            throw new RuntimeException('Unable to create temp directory: ' . $tempDir);
         }
 
         // Verify directory is writable

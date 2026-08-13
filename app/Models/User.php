@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
+use Database\Factories\PersonFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 use Override;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -48,8 +50,11 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property-read string|null $name
  * @property-read string $profile_photo_url
  * @property-read Team|null $currentTeam
+ * @property int $current_team_id
+ * @property PersonalAccessToken[] $tokens
+ * @property Team[] $ownedTeams
  */
-final class User extends Authenticatable
+final class User extends Authenticatable implements MustVerifyEmail
     // ---------------------------------------------------------------------------------------
     // class User extends Authenticatable implements MustVerifyEmail
     //
@@ -58,7 +63,7 @@ final class User extends Authenticatable
 {
     use HasApiTokens;
 
-    /** @use HasFactory<\Database\Factories\PersonFactory> */
+    /** @use HasFactory<PersonFactory> */
     use HasFactory;
 
     use HasProfilePhoto;
@@ -154,7 +159,9 @@ final class User extends Authenticatable
     public function teamsStatistics(): Collection
     {
         /** @var EloquentCollection<int, Team> */
-        return $this->ownedTeams()->withCount(['users as users_count', 'persons as persons_count', 'couples as couples_count'])->get(['id', 'name', 'personal_team']);
+        return $this->ownedTeams()
+            ->withCount(['users as users_count', 'persons as persons_count', 'couples as couples_count'])
+            ->get(['id', 'name', 'personal_team']);
     }
 
     /**
@@ -206,7 +213,7 @@ final class User extends Authenticatable
         parent::boot();
 
         // Clear cache when user is updated
-        self::updated(function (User $user): void {
+        self::updated(static function (User $user): void {
             $user->isDeletableCache = null;
         });
     }
@@ -218,9 +225,7 @@ final class User extends Authenticatable
     protected function name(): Attribute
     {
         return Attribute::get(function (): string {
-            $name = Str::of("{$this->firstname} {$this->surname}")->trim()->value();
-
-            return $name === '' ? '' : $name;
+            return Str::of("$this->firstname $this->surname")->trim()->value();
         });
     }
 

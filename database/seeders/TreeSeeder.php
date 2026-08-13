@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Person;
 use Illuminate\Database\Seeder;
+use Random\RandomException;
 
 final class TreeSeeder extends Seeder
 {
@@ -22,13 +23,16 @@ final class TreeSeeder extends Seeder
 
     protected int $totalPersonsCreated = 0;
 
+    /**
+     * @throws RandomException
+     */
     public function run(): void
     {
         // Randomly pick whether the root ancestor will be father or mother for their child.
-        $initialParentType = rand(0, 1) === 0 ? 'father' : 'mother';
+        $initialParentType = random_int(0, 1) === 0 ? 'father' : 'mother';
 
         // Create the first ancestor with sex matching role.
-        $ancestor = Person::create([
+        $ancestor = Person::query()->create([
             'firstname' => 'Ancestor',
             'surname'   => 'Level 0',
             'sex'       => $initialParentType === 'father' ? 'm' : 'f',
@@ -36,30 +40,33 @@ final class TreeSeeder extends Seeder
         ]);
 
         $this->totalPersonsCreated++;
-        echo "level = 0, id = {$ancestor->id}, sex = {$ancestor->sex}, role for next = {$initialParentType}\n";
+        echo "level = 0, id = $ancestor->id, sex = $ancestor->sex, role for next = $initialParentType\n";
 
         // Start creating descendants.
         $this->createChildren($ancestor, $initialParentType, 1);
 
-        echo "Total persons created: {$this->totalPersonsCreated}\n";
+        echo "Total persons created: $this->totalPersonsCreated\n";
     }
 
+    /**
+     * @throws RandomException
+     */
     protected function createChildren(Person $parent, string $parentType, int $level): void
     {
         if ($level > $this->level_max) {
             return;
         }
 
-        $numChildren       = rand(1, 2);
-        $mustContinueIndex = rand(1, $numChildren);
+        $numChildren       = random_int(1, 2);
+        $mustContinueIndex = random_int(1, $numChildren);
 
         for ($i = 1; $i <= $numChildren; $i++) {
-            $nextParentType = rand(0, 1) === 0 ? 'father' : 'mother';
+            $nextParentType = random_int(0, 1) === 0 ? 'father' : 'mother';
             $childSex       = $nextParentType === 'father' ? 'm' : 'f';
 
-            $child = Person::create([
-                'firstname' => "Child {$i} of {$parent->id}",
-                'surname'   => "Level {$level}",
+            $child = Person::query()->create([
+                'firstname' => "Child $i of $parent->id",
+                'surname'   => "Level $level",
                 'sex'       => $childSex,
                 'father_id' => $parentType === 'father' ? $parent->id : null,
                 'mother_id' => $parentType === 'mother' ? $parent->id : null,
@@ -67,14 +74,14 @@ final class TreeSeeder extends Seeder
             ]);
 
             $this->totalPersonsCreated++;
-            echo "level = {$level}, id = {$child->id}, parent = {$parent->id} as {$parentType}, child sex = {$childSex}\n";
+            echo "level = $level, id = $child->id, parent = $parent->id as $parentType, child sex = $childSex\n";
 
-            $continueBranch = ($i === $mustContinueIndex) || (rand(1, 100) <= 20);
+            $continueBranch = ($i === $mustContinueIndex) || (random_int(1, 100) <= 20);
 
             if ($continueBranch) {
                 $this->createChildren($child, $nextParentType, $level + 1);
             } else {
-                echo "Branch stops at level {$level} for child {$child->id}\n";
+                echo "Branch stops at level $level for child $child->id\n";
             }
         }
     }

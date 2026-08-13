@@ -40,7 +40,7 @@ final class AddTeamMember implements AddsTeamMembers
         /* -------------------------------------------------------------------------------------------- */
         // Log activity: Added Team Member
         /* -------------------------------------------------------------------------------------------- */
-        defer(function () use ($user, $team, $newTeamMember, $role): void {
+        defer(static function () use ($user, $team, $newTeamMember, $role): void {
             activity()
                 ->useLog('user_team')
                 ->performedOn($team)
@@ -89,7 +89,7 @@ final class AddTeamMember implements AddsTeamMembers
      */
     private function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
     {
-        return function ($validator) use ($team, $email): void {
+        return static function ($validator) use ($team, $email): void {
             $validator->errors()->addIf(
                 $team->hasUserWithEmail($email),
                 'email',

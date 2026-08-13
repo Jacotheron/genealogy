@@ -12,9 +12,9 @@ class CoupleFactory extends Factory
     public function definition(): array
     {
         // Get two different people
-        $person1 = Person::inRandomOrder()->first() ?? Person::factory()->create();
+        $person1 = Person::query()->inRandomOrder()->first() ?? Person::factory()->create();
         do {
-            $person2 = Person::inRandomOrder()->first() ?? Person::factory()->create();
+            $person2 = Person::query()->inRandomOrder()->first() ?? Person::factory()->create();
         } while ($person1->id === $person2->id);
 
         $dateStart = $this->faker->optional()->date();

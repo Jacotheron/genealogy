@@ -216,7 +216,7 @@ new class extends Component
             $index = $this->extractPhotoIndex($photo);
 
             if ($index === null) {
-                throw new Exception('Invalid photo filename format');
+                throw new RuntimeException('Invalid photo filename format');
             }
 
             $deleted = $personPhotos->delete($index);
@@ -235,7 +235,7 @@ new class extends Component
             } else {
                 $this->toast()->warning(__('app.warning'), __('person.photo_not_found'))->send();
             }
-        } catch (Exception $e) {
+        } catch (RuntimeException $e) {
             Log::error('Failed to delete person photo', [
                 'person_id' => $this->person->id,
                 'photo'     => $photo,
@@ -258,7 +258,7 @@ new class extends Component
 
             // Verify photo exists
             if (! $personPhotos->photoExists($photo)) {
-                throw new Exception('Photo does not exist');
+                throw new RuntimeException('Photo does not exist');
             }
 
             $this->person->update(['photo' => $photo]);
@@ -273,7 +273,7 @@ new class extends Component
 
             // Dispatch event so Photo gallery can update primary photo display
             $this->dispatch('photos_updated');
-        } catch (Exception $e) {
+        } catch (RuntimeException $e) {
             Log::error('Failed to set primary photo', [
                 'person_id' => $this->person->id,
                 'photo'     => $photo,
@@ -382,7 +382,7 @@ new class extends Component
         $mimeType     = $file->getMimeType();
         $allowedMimes = array_keys(config('app.upload_photo_accept'));
 
-        if (! in_array($mimeType, $allowedMimes)) {
+        if (! in_array($mimeType, $allowedMimes, true)) {
             Log::warning('Invalid MIME type detected', [
                 'file'    => $file->getClientOriginalName(),
                 'mime'    => $mimeType,
@@ -406,7 +406,7 @@ new class extends Component
             // Verify the image type matches expected types
             $allowedImageTypes = config('app.upload_photo_validation.image_types');
 
-            if (! in_array($imageInfo[2], $allowedImageTypes)) {
+            if (! in_array($imageInfo[2], $allowedImageTypes, true)) {
                 Log::warning('Image type not allowed', [
                     'file' => $file->getClientOriginalName(),
                     'type' => $imageInfo[2],
@@ -427,7 +427,7 @@ new class extends Component
         $extension         = mb_strtolower($file->getClientOriginalExtension());
         $allowedExtensions = config('app.upload_photo_validation.extensions');
 
-        if (! in_array($extension, $allowedExtensions)) {
+        if (! in_array($extension, $allowedExtensions, true)) {
             Log::warning('Invalid file extension', [
                 'file'      => $file->getClientOriginalName(),
                 'extension' => $extension,

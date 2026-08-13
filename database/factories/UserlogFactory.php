@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Userlog;
+use DateMalformedStringException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Userlog>
+ * @extends Factory<Userlog>
  */
 final class UserlogFactory extends Factory
 {
@@ -34,6 +36,9 @@ final class UserlogFactory extends Factory
         ];
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     private function randomUtcDateTime(string $start, string $end): DateTimeImmutable
     {
         return new DateTimeImmutable(
@@ -42,6 +47,9 @@ final class UserlogFactory extends Factory
         );
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     private function randomUtcDateTimeAfter(DateTimeImmutable $after): DateTimeImmutable
     {
         // Convert to string so Faker can handle it

@@ -37,7 +37,7 @@ final class RemoveTeamMember implements RemovesTeamMembers
         /* -------------------------------------------------------------------------------------------- */
         // Log activity: Remove Team Member
         /* -------------------------------------------------------------------------------------------- */
-        defer(function () use ($user, $team, $teamMember, $role): void {
+        defer(static function () use ($user, $team, $teamMember, $role): void {
             activity()
                 ->useLog('user_team')
                 ->performedOn($team)
@@ -58,8 +58,7 @@ final class RemoveTeamMember implements RemovesTeamMembers
      */
     private function authorize(User $user, Team $team, User $teamMember): void
     {
-        if (! Gate::forUser($user)->check('removeTeamMember', $team) &&
-            $user->id !== $teamMember->id) {
+        if ($user->id !== $teamMember->id && ! Gate::forUser($user)->check('removeTeamMember', $team)) {
             throw new AuthorizationException;
         }
     }

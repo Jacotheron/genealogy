@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,7 +18,7 @@ new class extends Component
 
     // -----------------------------------------------------------------------
     #[Computed]
-    public function activities()
+    public function activities(): LengthAwarePaginator
     {
         $timezone    = session('timezone', 'UTC');
         $currentTeam = $this->currentTeam();
@@ -25,7 +26,7 @@ new class extends Component
         $query = Activity::with('causer')
             ->where('log_name', 'person_couple')
             ->where('team_id', $currentTeam->id)
-            ->where('updated_at', '>=', today()->startOfMonth()->subMonths(1));
+            ->where('updated_at', '>=', today()->startOfMonth()->subMonths());
 
         if ($this->subjectTypeFilter !== 'all') {
             $query->where('subject_type', $this->subjectTypeFilter);
@@ -61,9 +62,10 @@ new class extends Component
     {
         $currentTeam = $this->currentTeam();
 
-        return Activity::where('log_name', 'person_couple')
+        return Activity::query()
+            ->where('log_name', 'person_couple')
             ->where('team_id', $currentTeam->id)
-            ->where('updated_at', '>=', today()->startOfMonth()->subMonths(1))
+            ->where('updated_at', '>=', today()->startOfMonth()->subMonths())
             ->distinct()
             ->pluck('subject_type')
             ->map(fn ($type) => class_basename($type))

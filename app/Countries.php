@@ -39,7 +39,7 @@ final class Countries
         $countryCode = self::LOCALE_TO_COUNTRY[$locale] ?? 'en'; // Default to 'en' if locale is not found
 
         // Load the country data for the specified locale or fallback to English
-        $this->countries = $this->loadCountriesData("{$basePath}{$countryCode}") ?? $this->loadCountriesData("{$basePath}en") ?? collect();
+        $this->countries = $this->loadCountriesData("$basePath$countryCode") ?? $this->loadCountriesData("{$basePath}en") ?? collect();
     }
 
     /**
@@ -82,7 +82,7 @@ final class Countries
      */
     private function loadCountriesData(string $path): ?Collection
     {
-        $file = "{$path}/countries.php";
+        $file = "$path/countries.php";
 
         if (! file_exists($file)) {
             return null;

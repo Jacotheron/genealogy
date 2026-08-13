@@ -58,7 +58,7 @@ new class extends Component
     #[Computed(persist: true, seconds: 3600, cache: true)]
     public function countries(): Collection
     {
-        return (new Countries(app()->getLocale()))->getAllCountries();
+        return new Countries(app()->getLocale())->getAllCountries();
     }
 
     /**
@@ -88,7 +88,7 @@ new class extends Component
         $this->resetValidation();
 
         if ($eventId) {
-            $event = PersonEvent::findOrFail($eventId);
+            $event = PersonEvent::query()->findOrFail($eventId);
 
             $this->editingEventId = $event->id;
             $this->type           = $event->type;
@@ -152,9 +152,9 @@ new class extends Component
         ];
 
         if ($this->editingEventId) {
-            PersonEvent::findOrFail($this->editingEventId)->update($data);
+            PersonEvent::query()->findOrFail($this->editingEventId)->update($data);
         } else {
-            PersonEvent::create($data);
+            PersonEvent::query()->create($data);
         }
 
         $this->closeModal();
@@ -183,7 +183,7 @@ new class extends Component
     {
         $this->authorizePermission('person:update');
 
-        $event = PersonEvent::where('person_id', $this->person->id)->findOrFail($eventId);
+        $event = PersonEvent::query()->where('person_id', $this->person->id)->findOrFail($eventId);
 
         $event->delete();
 

@@ -28,7 +28,7 @@
                             )
                             ->toArray();
 
-                        print_r($safeSession);
+//                        print_r($safeSession);
                     @endphp
                 </pre>
             </div>

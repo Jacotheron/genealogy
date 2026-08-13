@@ -13,19 +13,19 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-//        $this->call([
-//            SettingSeeder::class,
-//            GenderSeeder::class,
-//        ]);
+        //        $this->call([
+        //            SettingSeeder::class,
+        //            GenderSeeder::class,
+        //        ]);
 
         // DEMO DATA
-//        $this->call([
-//            UserSeeder::class,
-//            TeamSeeder::class,
-//            DemoSeeder::class,
-//
-//            // TreeSeeder::class,
-//        ]);
+        //        $this->call([
+        //            UserSeeder::class,
+        //            TeamSeeder::class,
+        //            DemoSeeder::class,
+        //
+        //            // TreeSeeder::class,
+        //        ]);
 
         // -----------------------------------------------------------------------
         // if you want to use the application in production, please remove :

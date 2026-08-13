@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\PersonEventFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +24,19 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property string|null $place
  * @property string|null $address
  * @property string|null $description
+ * @property string|null $street
+ * @property string|null $number
+ * @property string|null $postal_code
+ * @property string|null $city
+ * @property string|null $province
+ * @property string|null $state
+ * @property string|null $country
  * @property-read string $type_label
  * @property-read string|null $date_formatted
  */
 final class PersonEvent extends Model
 {
-    /** @use HasFactory<\Database\Factories\PersonEventFactory> */
+    /** @use HasFactory<PersonEventFactory> */
     use HasFactory;
 
     use LogsActivity;
@@ -190,9 +198,9 @@ final class PersonEvent extends Model
     {
         return Attribute::make(get: function (): ?string {
             $components = array_filter([
-                mb_trim("{$this->street} {$this->number}"),
-                mb_trim("{$this->postal_code} {$this->city}"),
-                mb_trim("{$this->province} {$this->state}"),
+                mb_trim("$this->street $this->number"),
+                mb_trim("$this->postal_code $this->city"),
+                mb_trim("$this->province $this->state"),
             ]);
 
             return $components !== [] ? implode(', ', $components) : null;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Countries;
 use Carbon\Carbon;
+use Database\Factories\PersonFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -53,10 +53,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property-read Collection<int, Person> $children
  * @property-read Collection<int, Couple> $couples
  * @property-read Collection<int, PersonEvent> $events
+ * @property mixed $photo
  */
 final class Person extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\PersonFactory> */
+    /** @use HasFactory<PersonFactory> */
     use HasFactory;
 
     use HasManyMergedRelation;
@@ -169,9 +170,9 @@ final class Person extends Model implements HasMedia
         $searchString = strip_tags(mb_trim($searchString));
 
         // Escape SQL wildcard characters in search terms
-        $escapeLike = fn (string $value): string => str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $value);
+        $escapeLike = static fn (string $value): string => str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $value);
 
-        collect(str_getcsv($searchString, ' ', '"'))
+        collect(str_getcsv($searchString, ' '))
             ->filter()
             ->each(function (string $searchTerm) use ($query, $escapeLike): void {
                 // Check if term starts with % for wildcard search
@@ -196,7 +197,7 @@ final class Person extends Model implements HasMedia
     #[Scope]
     public function scopeYoungerThan(Builder $query, ?string $dob, ?int $yob): void
     {
-        if (empty($dob) && empty($yob)) {
+        if (empty($dob) && $yob === null) {
             return; // No input → return all
         }
 
@@ -212,11 +213,11 @@ final class Person extends Model implements HasMedia
                             $inner->whereNull('dob')->where('yob', '>', $dobYear);
                         });
                 });
-            } elseif (! empty($yob)) {
+            } elseif ($yob !== null) {
                 // Case: only yob is given
                 $q->where(function ($sub) use ($yob): void {
                     $sub->whereNull('dob')->whereNull('yob') // no data, assume younger
-                        ->orWhere('dob', '>', "{$yob}-12-31")
+                        ->orWhere('dob', '>', "$yob-12-31")
                         ->orWhere(function ($inner) use ($yob): void {
                             $inner->whereNull('dob')->where('yob', '>', $yob);
                         });
@@ -229,7 +230,7 @@ final class Person extends Model implements HasMedia
     #[Scope]
     public function scopeOlderThan(Builder $query, ?string $dob, ?int $yob): void
     {
-        if (empty($dob) && empty($yob)) {
+        if (empty($dob) && $yob === null) {
             return; // No input → return all
         }
 
@@ -245,11 +246,11 @@ final class Person extends Model implements HasMedia
                             $inner->whereNull('dob')->where('yob', '<', $dobYear);
                         });
                 });
-            } elseif (! empty($yob)) {
+            } elseif ($yob !== null) {
                 // Case: Only yob is given
                 $q->where(function ($sub) use ($yob): void {
                     $sub->whereNull('dob')->whereNull('yob') // no data, assume older
-                        ->orWhere('dob', '<', "{$yob}-01-01")
+                        ->orWhere('dob', '<', "$yob-01-01")
                         ->orWhere(function ($inner) use ($yob): void {
                             $inner->whereNull('dob')->where('yob', '<', $yob);
                         });
@@ -262,7 +263,7 @@ final class Person extends Model implements HasMedia
     #[Scope]
     public function scopePartnerOffset(Builder $query, ?string $dob, ?int $yob, int $offset = 40): void
     {
-        if (empty($dob) && empty($yob)) {
+        if (empty($dob) && $yob === null) {
             return; // No input → return all
         }
 
@@ -282,7 +283,7 @@ final class Person extends Model implements HasMedia
                             $inner->whereNull('dob')->whereBetween('yob', [$minYear, $maxYear]);
                         });
                 });
-            } elseif (! empty($yob)) {
+            } elseif ($yob !== null) {
                 $minYear = $yob - $offset;
                 $maxYear = $yob + $offset;
                 $minDate = "{$minYear}-01-01";
@@ -480,7 +481,7 @@ final class Person extends Model implements HasMedia
         /** @var PersonMetadata|null $metadata */
         $metadata = $this->metadata->firstWhere('key', $key);
 
-        return $metadata ? $metadata->value : null;
+        return $metadata?->value;
     }
 
     /* updates, deletes if empty or creates 1 to n METADATA related to the person */
@@ -490,7 +491,8 @@ final class Person extends Model implements HasMedia
         // First, delete any existing metadata where the value is empty
         foreach (PersonMetadata::METADATA_KEYS as $key) {
             if ($personMetadata->has($key) && empty($personMetadata->get($key))) {
-                PersonMetadata::where('person_id', $this->id)
+                PersonMetadata::query()
+                    ->where('person_id', $this->id)
                     ->where('key', $key)
                     ->delete();
             }
@@ -520,7 +522,7 @@ final class Person extends Model implements HasMedia
     {
         // Early return if no parent information
         if (! $this->father_id && ! $this->mother_id && ! $this->parents_id) {
-            return collect([]);
+            return collect();
         }
 
         $siblings = collect();
@@ -578,7 +580,7 @@ final class Person extends Model implements HasMedia
                 'year'           => $this->yob ?? ($this->dob ? (int) Carbon::parse($this->dob)->format('Y') : null),
                 'date_formatted' => $this->birth_formatted,
                 'place'          => $this->pob,
-                'sort_date'      => $this->dob ?? ($this->yob ? "{$this->yob}-01-01" : null),
+                'sort_date'      => $this->dob ?? ($this->yob ? "$this->yob-01-01" : null),
                 'color'          => 'green',
                 'icon'           => 'balloon',
             ]);
@@ -593,7 +595,7 @@ final class Person extends Model implements HasMedia
                 'year'           => $this->yod ?? ($this->dod ? (int) Carbon::parse($this->dod)->format('Y') : null),
                 'date_formatted' => $this->death_formatted,
                 'place'          => $this->pod,
-                'sort_date'      => $this->dod ?? ($this->yod ? "{$this->yod}-01-01" : null),
+                'sort_date'      => $this->dod ?? ($this->yod ? "$this->yod-01-01" : null),
                 'color'          => 'green',
                 'icon'           => 'grave-2',
             ]);
@@ -641,7 +643,7 @@ final class Person extends Model implements HasMedia
                     'date_formatted' => $child->birth_formatted,
                     'child'          => $child->name,
                     'place'          => $child->pob,
-                    'sort_date'      => $child->dob ?? ($child->yob ? "{$child->yob}-01-01" : null),
+                    'sort_date'      => $child->dob ?? ($child->yob ? "$child->yob-01-01" : null),
                     'color'          => 'blue',
                     'icon'           => 'balloon',
                 ]);
@@ -656,7 +658,7 @@ final class Person extends Model implements HasMedia
                     'date_formatted' => $child->death_formatted,
                     'child'          => $child->name,
                     'place'          => $child->pod,
-                    'sort_date'      => $child->dod ?? ($child->yod ? "{$child->yod}-01-01" : null),
+                    'sort_date'      => $child->dod ?? ($child->yod ? "$child->yod-01-01" : null),
                     'color'          => 'blue',
                     'icon'           => 'grave-2',
                 ]);
@@ -671,9 +673,9 @@ final class Person extends Model implements HasMedia
                 'date'           => $event->date,
                 'year'           => $event->year,
                 'date_formatted' => $event->date_formatted,
-                'place'          => $event->address ?? ($event->place ? $event->place : null),
+                'place'          => $event->address ?? ($event->place ?: null),
                 'description'    => $event->description,
-                'sort_date'      => $event->date ?? ($event->year ? "{$event->year}-01-01" : null),
+                'sort_date'      => $event->date ?? ($event->year ? "$event->year-01-01" : null),
                 'color'          => 'gray',
                 'icon'           => 'calendar-week',
             ]);
@@ -693,7 +695,7 @@ final class Person extends Model implements HasMedia
     protected static function booted(): void
     {
         // Team scope
-        self::addGlobalScope('team', function (Builder $builder): void {
+        self::addGlobalScope('team', static function (Builder $builder): void {
             $user = auth()->user();
 
             if (! $user || $user->is_developer) {
@@ -708,7 +710,7 @@ final class Person extends Model implements HasMedia
         });
 
         // Handle force deletes (permanent deletion only)
-        self::forceDeleted(function (Person $person): void {
+        self::forceDeleted(static function (Person $person): void {
             // Clean up photos
             Storage::disk('photos')->deleteDirectory($person->team_id . '/' . $person->id);
 
@@ -724,9 +726,7 @@ final class Person extends Model implements HasMedia
     protected function name(): Attribute
     {
         return Attribute::get(function (): string {
-            $name = Str::of("{$this->firstname} {$this->surname}")->trim()->value();
-
-            return $name === '' ? '' : $name;
+            return Str::of("$this->firstname $this->surname")->trim()->value();
         });
     }
 
@@ -806,7 +806,7 @@ final class Person extends Model implements HasMedia
             // Determine if the next birthday is this year or next year
             $nextBirthday = $birthdayThisYear->isPast() ? $birthdayThisYear->addYear() : $birthdayThisYear;
 
-            return (int) $today->diffInDays($nextBirthday, false);
+            return (int) $today->diffInDays($nextBirthday);
         });
     }
 
@@ -840,7 +840,7 @@ final class Person extends Model implements HasMedia
                 $lifetime = null;
             }
 
-            return $lifetime ? $lifetime : null; // returns YEAR(dob) - YEAR(dod) or null
+            return $lifetime ?: null; // returns YEAR(dob) - YEAR(dod) or null
         });
     }
 
@@ -912,14 +912,7 @@ final class Person extends Model implements HasMedia
     protected function address(): Attribute
     {
         return Attribute::make(get: function (): ?string {
-            $countries = new Countries(app()->getLocale());
-
-            $components = array_filter([
-                mb_trim("{$this->street} {$this->number}"),
-                mb_trim("{$this->postal_code} {$this->city}"),
-                mb_trim("{$this->province} {$this->state}"),
-                $this->country ? $countries->getCountryName($this->country) : null,
-            ]);
+            $components = $this->getFilter();
 
             // Implode with newline characters.
             $address = implode("\n", $components);
@@ -932,14 +925,7 @@ final class Person extends Model implements HasMedia
     protected function addressGoogle(): Attribute
     {
         return Attribute::make(get: function (): ?string {
-            $countries = new Countries(app()->getLocale());
-
-            $components = array_filter([
-                mb_trim("{$this->street} {$this->number}"),
-                mb_trim("{$this->postal_code} {$this->city}"),
-                mb_trim("{$this->province} {$this->state}"),
-                $this->country ? $countries->getCountryName($this->country) : null,
-            ]);
+            $components = $this->getFilter();
 
             if (empty($components)) {
                 return null;
@@ -960,7 +946,7 @@ final class Person extends Model implements HasMedia
             $address   = $this->getMetadataValue('cemetery_location_address');
 
             return match (true) {
-                $latitude && $longitude => 'https://www.google.com/maps/search/?api=1&query=' . urlencode("{$latitude},{$longitude}"),
+                $latitude && $longitude => 'https://www.google.com/maps/search/?api=1&query=' . urlencode("$latitude,$longitude"),
                 $address                => 'https://www.google.com/maps/search/' . urlencode(str_replace("\n", ',', $address)),
                 default                 => null
             };
@@ -1015,5 +1001,17 @@ final class Person extends Model implements HasMedia
             $sharedFather || $sharedMother                     => '[1/2]',  // Half siblings
             default                                            => '[+]'     // Step-siblings
         };
+    }
+
+    protected function getFilter()
+    {
+        $countries = new Countries(app()->getLocale());
+
+        return array_filter([
+            mb_trim("$this->street $this->number"),
+            mb_trim("$this->postal_code $this->city"),
+            mb_trim("$this->province $this->state"),
+            $this->country ? $countries->getCountryName($this->country) : null,
+        ]);
     }
 }

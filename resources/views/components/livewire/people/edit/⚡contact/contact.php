@@ -42,7 +42,7 @@ new class extends Component
     #[Computed(persist: true, seconds: 3600, cache: true)]
     public function countries(): Collection
     {
-        return (new Countries(app()->getLocale()))->getAllCountries();
+        return new Countries(app()->getLocale())->getAllCountries();
     }
 
     // -----------------------------------------------------------------------

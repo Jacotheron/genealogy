@@ -81,7 +81,7 @@ new class extends Component
     {
         $password = new Collection();
 
-        $options = (new Collection([
+        $options = new Collection([
             'letters' => $letters === true ? [
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
                 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
@@ -98,7 +98,7 @@ new class extends Component
                 ']', '|', ':', ';',
             ] : null,
             'spaces' => $spaces === true ? [' '] : null,
-        ]))
+        ])
             ->filter()
             ->each(function ($chars) use ($password) {
                 $charCount = count($chars);
@@ -115,7 +115,7 @@ new class extends Component
         $allCharsCount = count($allChars);
 
         if ($allCharsCount > 0) {
-            $remaining = Collection::times($length, fn () => $allChars[random_int(0, $allCharsCount - 1)]);
+            $remaining = Collection::times($length, static fn () => $allChars[random_int(0, $allCharsCount - 1)]);
 
             return $password->merge($remaining)->shuffle()->implode('');
         }

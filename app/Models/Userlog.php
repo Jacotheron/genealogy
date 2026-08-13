@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\PersonFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Carbon;
 
 final class Userlog extends Model
 {
-    /** @use HasFactory<\Database\Factories\PersonFactory> */
+    /** @use HasFactory<PersonFactory> */
     use HasFactory;
 
     /**
@@ -46,7 +47,9 @@ final class Userlog extends Model
     public function date(): Attribute
     {
         return new Attribute(
-            get: fn (mixed $value, array $attributes): string => Carbon::parse($attributes['created_at'])->timezone(session('timezone') ?? 'UTC')->isoFormat('dddd LL'),
+            get: fn (mixed $value, array $attributes): string => Carbon::parse($attributes['created_at'])
+                ->timezone(session('timezone') ?? 'UTC')
+                ->isoFormat('dddd LL'),
         );
     }
 
@@ -56,7 +59,9 @@ final class Userlog extends Model
     public function time(): Attribute
     {
         return new Attribute(
-            get: fn (mixed $value, array $attributes): string => Carbon::parse($attributes['created_at'])->timezone(session('timezone') ?? 'UTC')->format('H:i:s'),
+            get: fn (mixed $value, array $attributes): string => Carbon::parse($attributes['created_at'])
+                ->timezone(session('timezone') ?? 'UTC')
+                ->format('H:i:s'),
         );
     }
 }

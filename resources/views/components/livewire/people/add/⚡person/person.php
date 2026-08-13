@@ -55,7 +55,9 @@ new class extends Component
 
         $teamId = $user->isDeveloper() ? null : $user->currentTeam->id;
 
-        return PersonModel::similarTo($teamId, $nameFields)->get();
+        return PersonModel::query()
+            ->similarTo($teamId, $nameFields)
+            ->get();
     }
 
     /**
@@ -94,11 +96,11 @@ new class extends Component
             'birthname' => $validated['form']['birthname'],
             'nickname'  => $validated['form']['nickname'],
             'sex'       => $validated['form']['sex'],
-//            'gender_id' => $validated['form']['gender_id'] ?? null,
-            'yob'       => $validated['form']['yob'],
-            'dob'       => $validated['form']['dob'],
-            'pob'       => $validated['form']['pob'],
-            'team_id'   => $user->currentTeam->id,
+            //            'gender_id' => $validated['form']['gender_id'] ?? null,
+            'yob'     => $validated['form']['yob'],
+            'dob'     => $validated['form']['dob'],
+            'pob'     => $validated['form']['pob'],
+            'team_id' => $user->currentTeam->id,
         ]);
 
         // Handle photo uploads if present, using SavesPersonPhotos trait
@@ -122,10 +124,10 @@ new class extends Component
             'form.birthname' => ['nullable', 'string', 'max:255'],
             'form.nickname'  => ['nullable', 'string', 'max:255'],
             'form.sex'       => ['required', 'string', 'max:1', 'in:m,f'],
-//            'form.gender_id' => ['nullable', 'integer'],
-            'form.yob'       => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
-            'form.dob'       => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
-            'form.pob'       => ['nullable', 'string', 'max:255'],
+            //            'form.gender_id' => ['nullable', 'integer'],
+            'form.yob' => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
+            'form.dob' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
+            'form.pob' => ['nullable', 'string', 'max:255'],
         ], $this->getPhotoUploadRules());
     }
 
@@ -148,10 +150,10 @@ new class extends Component
             'form.birthname' => __('person.birthname'),
             'form.nickname'  => __('person.nickname'),
             'form.sex'       => __('person.sex'),
-//            'form.gender_id' => __('person.gender'),
-            'form.yob'       => __('person.yob'),
-            'form.dob'       => __('person.dob'),
-            'form.pob'       => __('person.pob'),
+            //            'form.gender_id' => __('person.gender'),
+            'form.yob' => __('person.yob'),
+            'form.dob' => __('person.dob'),
+            'form.pob' => __('person.pob'),
         ], $this->getPhotoUploadAttributes());
     }
 };

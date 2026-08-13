@@ -3,7 +3,7 @@
 @endsection
 
 <x-app-layout>
-    <div class="sticky top-[4.0rem] z-20 bg-gray-100 p-2 pb-5 dark:bg-gray-900">
+    <div class="sticky top-16 z-20 bg-gray-100 p-2 pb-5 dark:bg-gray-900">
         <livewire:people::heading :person="$person" />
     </div>
 

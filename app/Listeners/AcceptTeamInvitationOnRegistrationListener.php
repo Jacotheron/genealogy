@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Laravel\Jetstream\Jetstream;
 
@@ -14,13 +15,15 @@ class AcceptTeamInvitationOnRegistrationListener
     public function handle(Registered $event): void
     {
         $user = $event->user;
+        /* @var User $user */
 
         // Grab the token used during this request session/payload
         $token = request()->input('token');
 
         if ($token) {
             $invitationModel = Jetstream::teamInvitationModel();
-            $invitation      = $invitationModel::where('token', $token)
+            $invitation      = $invitationModel::query()
+                ->where('token', $token)
                 ->where('email', $user->email)
                 ->first();
 

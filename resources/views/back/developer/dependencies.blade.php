@@ -317,17 +317,18 @@
                     <hr class="my-4" />
 
                     <ul class="w-full">
-                        <x-link href="https://github.com/alisalehi1380/laravel-lang-files-translator" target="_blank"
-                            >alisalehi1380/laravel-lang-files-translator</x-link>
-                        <x-ts-button xs class="ms-5" color="orange">{{ 'Optional' }}</x-ts-button>
-                        <x-ts-button xs class="ms-5" color="red">{{ 'Not compatible LARAVEL 13 yet' }}</x-ts-button>
-                        <br />
-                        <span class="ms-5">to create new language, use command :</span>
-                        <span class="text-red-500">php artisan translate:lang {from} {to}</span>
-                        <br />
-                        <span class="ms-5">example:</span>
-                        <span class="text-red-500">php artisan translate:lang en fa</span>
-                        for Persian (fa)
+                        <li class="py-2">
+                            <x-link href="https://github.com/alisalehi1380/laravel-lang-files-translator" target="_blank"
+                                >alisalehi1380/laravel-lang-files-translator</x-link>
+                            <x-ts-button xs class="ms-5" color="orange">{{ 'Optional' }}</x-ts-button>
+                            <x-ts-button xs class="ms-5" color="red">{{ 'Not compatible LARAVEL 13 yet' }}</x-ts-button>
+                            <br />
+                            <span class="ms-5">to create new language, use command :</span>
+                            <span class="text-red-500">php artisan translate:lang {from} {to}</span>
+                            <br />
+                            <span class="ms-5">example:</span>
+                            <span class="text-red-500">php artisan translate:lang en fa</span>
+                            for Persian (fa)
                         </li>
                     </ul>
                 </div>

@@ -51,7 +51,7 @@ new class extends Component
     {
         $this->authorizePermission('person:update');
 
-        $child = Person::findOrFail($child_id);
+        $child = Person::query()->findOrFail($child_id);
 
         $key = $this->person->sex === 'm' ? 'father_id' : 'mother_id';
         $child->update([$key => null]);

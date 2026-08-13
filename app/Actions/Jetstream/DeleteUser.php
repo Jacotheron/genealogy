@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Actions\Jetstream;
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Contracts\DeletesTeams;
 use Laravel\Jetstream\Contracts\DeletesUsers;
+use Throwable;
 
 final class DeleteUser implements DeletesUsers
 {
@@ -19,6 +19,7 @@ final class DeleteUser implements DeletesUsers
 
     /**
      * Delete the given user.
+     * @throws Throwable
      */
     public function delete(User $user): void
     {

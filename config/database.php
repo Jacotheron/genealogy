@@ -65,7 +65,7 @@ return [
                 (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
             'dump' => [
-                'dump_binary_path' => env('BACKUP_DUMP_PATH', null), // only the path, so without `mysqldump` or `pg_dump`
+                'dump_binary_path' => env('BACKUP_DUMP_PATH'), // only the path, so without `mysqldump` or `pg_dump`
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 // 'exclude_tables' => [],

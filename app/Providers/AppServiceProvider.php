@@ -8,6 +8,8 @@ use App\Models\Setting;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Exception;
+use Illuminate\Container\EntryNotFoundException;
+use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Client\RequestException;
@@ -20,6 +22,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Override;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use TallStackUi\Facades\TallStackUi;
 
 final class AppServiceProvider extends ServiceProvider
@@ -71,7 +75,8 @@ final class AppServiceProvider extends ServiceProvider
         // ------------------------------------------------------------------------------
         if ($this->isDatabaseOnline() && Schema::hasTable('settings')) {
             // Cache the applications settings
-            $this->app->singleton('settings', fn () => Cache::rememberForever('settings', fn () => Setting::pluck('value', 'key')));
+            $this->app->singleton('settings', fn () => Cache::rememberForever('settings', static fn () => Setting::query()
+                ->pluck('value', 'key')));
 
             $this->logAllQueries();
             $this->LogAllQueriesSlow();
@@ -122,7 +127,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function configureLogViewer(): void
     {
-        LogViewer::auth(function ($request) {
+        LogViewer::auth(static function ($request) {
             $user = $request->user();
 
             // If user is not authenticated, deny access
@@ -240,8 +245,11 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function logAllQueries(): void
     {
-        if (settings('log_all_queries')) {
-            DB::listen(fn ($query) => Log::debug($query->toRawSQL()));
+        try {
+            if (settings('log_all_queries')) {
+                DB::listen(static fn ($query) => Log::debug($query->toRawSQL()));
+            }
+        } catch (EntryNotFoundException|CircularDependencyException|NotFoundExceptionInterface|ContainerExceptionInterface) {
         }
     }
 
@@ -250,17 +258,20 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function LogAllQueriesSlow(): void
     {
-        if (settings('log_all_queries_slow')) {
-            DB::listen(function ($query): void {
-                if ($query->time > (int) settings('log_all_queries_slow_threshold')) {
-                    Log::warning('An individual database query exceeded ' . settings('log_all_queries_slow_threshold') . ' ms.', [
-                        'sql'       => $query->sql,
-                        'raw'       => $query->toRawSQL(),
-                        'time'      => $query->time,
-                        'formatted' => CarbonInterval::milliseconds($query->time)->cascade()->forHumans(['short' => true, 'parts' => 3, 'join' => true]),
-                    ]);
-                }
-            });
+        try {
+            if (settings('log_all_queries_slow')) {
+                DB::listen(static function ($query): void {
+                    if ($query->time > (int) settings('log_all_queries_slow_threshold')) {
+                        Log::warning('An individual database query exceeded ' . settings('log_all_queries_slow_threshold') . ' ms.', [
+                            'sql'       => $query->sql,
+                            'raw'       => $query->toRawSQL(),
+                            'time'      => $query->time,
+                            'formatted' => CarbonInterval::milliseconds($query->time)->cascade()->forHumans(['short' => true, 'parts' => 3, 'join' => true]),
+                        ]);
+                    }
+                });
+            }
+        } catch (EntryNotFoundException|CircularDependencyException|NotFoundExceptionInterface|ContainerExceptionInterface) {
         }
     }
 
@@ -269,14 +280,16 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function logAllQueriesNplusone(): void
     {
-        if (settings('log_all_queries_n+1')) {
-            Model::handleLazyLoadingViolationUsing(function ($model, $relation): void {
-                Log::warning(sprintf(
-                    'N+1 Query detected in model %s on relation %s.',
-                    $model::class,
-                    $relation
-                ));
-            });
-        }
+        try {
+            if (settings('log_all_queries_n+1')) {
+                Model::handleLazyLoadingViolationUsing(static function ($model, $relation): void {
+                    Log::warning(sprintf(
+                        'N+1 Query detected in model %s on relation %s.',
+                        $model::class,
+                        $relation
+                    ));
+                });
+            }
+        } catch (EntryNotFoundException|CircularDependencyException|NotFoundExceptionInterface|ContainerExceptionInterface) {}
     }
 }

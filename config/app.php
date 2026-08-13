@@ -147,7 +147,7 @@ return [
     |--------------------------------------------------------------------------
     */
     // hashed IP address to exclude developer's own visits from user location logging
-    'dev_ip_hash' => env('DEV_IP_HASH', null),
+    'dev_ip_hash' => env('DEV_IP_HASH'),
 
     'backup' => [
         'disk'          => env('BACKUP_DISK', 'backups'),

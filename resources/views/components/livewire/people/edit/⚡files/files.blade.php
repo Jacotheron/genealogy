@@ -1,16 +1,19 @@
-<div class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] md:w-3xl dark:bg-neutral-700 dark:text-neutral-50">
+@php use Carbon\Carbon; @endphp
+<div
+    class="flex flex-col rounded-sm bg-white text-neutral-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] md:w-3xl dark:bg-neutral-700 dark:text-neutral-50">
     {{-- card header --}}
-    <div class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
+    <div
+        class="flex h-14 min-h-min flex-col rounded-t border-b-2 border-neutral-100 p-2 text-lg font-medium dark:border-neutral-600 dark:text-neutral-50">
         <div class="flex flex-wrap items-start justify-center gap-2">
             <div class="max-w-full min-w-max flex-1 grow">
                 {{ __('person.files') }}
                 @if ($files->count() > 0)
-                    <x-ts-badge color="emerald" sm text="{{ count($files) }}" />
+                    <x-ts-badge color="emerald" sm text="{{ count($files) }}"/>
                 @endif
             </div>
 
             <div class="max-w-full min-w-max flex-1 grow text-end">
-                <x-ts-icon icon="tabler.files" class="inline-block size-5" />
+                <x-ts-icon icon="tabler.files" class="inline-block size-5"/>
             </div>
         </div>
     </div>
@@ -43,7 +46,7 @@
                     />
                 </div>
 
-                <x-hr.narrow class="my-2" />
+                <x-hr.narrow class="my-2"/>
 
                 {{-- uploads --}}
                 <x-ts-upload
@@ -64,7 +67,7 @@
                     <x-ts-button wire:click="save()" wire:loading.attr="disabled" :disabled="empty($uploads)">
                         <span wire:loading.remove wire:target="save">{{ __('app.save') }}</span>
                         <span wire:loading wire:target="save">
-                            <x-ts-icon icon="tabler.loader-2" class="inline-block size-5 animate-spin" />
+                            <x-ts-icon icon="tabler.loader-2" class="inline-block size-5 animate-spin"/>
                             {{ __('app.saving') ?? 'Saving...' }}
                         </span>
                     </x-ts-button>
@@ -108,7 +111,7 @@
                         @if ($file->hasCustomProperty('source_date'))
                             @php
                                 $timezone   = session('timezone', 'UTC');
-                                $sourceDate = \Carbon\Carbon::parse($file->getCustomProperty('source_date'))->timezone($timezone)->isoFormat('LL');
+                                $sourceDate = Carbon::parse($file->getCustomProperty('source_date'))->timezone($timezone)->isoFormat('LL');
                             @endphp
 
                             <p>{{ __('person.source_date') }} : {{ $sourceDate }}</p>
@@ -125,7 +128,7 @@
                                             title="{{ __('app.move_down') }}"
                                             wire:click="moveFile({{ $file->order_column }}, 'down')"
                                         >
-                                            <x-ts-icon icon="tabler.arrow-move-down" class="inline-block size-5" />
+                                            <x-ts-icon icon="tabler.arrow-move-down" class="inline-block size-5"/>
                                         </x-ts-button>
                                     @endif
 
@@ -136,7 +139,7 @@
                                             title="{{ __('app.move_up') }}"
                                             wire:click="moveFile({{ $file->order_column }}, 'up')"
                                         >
-                                            <x-ts-icon icon="tabler.arrow-move-up" class="inline-block size-5" />
+                                            <x-ts-icon icon="tabler.arrow-move-up" class="inline-block size-5"/>
                                         </x-ts-button>
                                     @endif
                                 </div>
@@ -152,7 +155,7 @@
                                         title="{{ __('app.download') }}"
                                         download="{{ $file['name'] }}"
                                     >
-                                        <x-ts-icon icon="tabler.download" class="inline-block size-5" />
+                                        <x-ts-icon icon="tabler.download" class="inline-block size-5"/>
                                     </x-ts-button>
 
                                     <span class="min-w-12.5 text-center text-sm leading-none">{{ Number::fileSize($file['size'], 2) }}</span>
@@ -163,7 +166,7 @@
                                         title="{{ __('app.delete') }}"
                                         wire:click="deleteFile({{ $file->id }})"
                                     >
-                                        <x-ts-icon icon="tabler.trash" class="inline-block size-5" />
+                                        <x-ts-icon icon="tabler.trash" class="inline-block size-5"/>
                                     </x-ts-button>
                                 </div>
                             </div>
@@ -173,7 +176,7 @@
             </div>
         @else
             <div class="flex justify-center" title="{{ __('app.nothing_recorded') }}">
-                <x-svg.empty-state alt="{{ __('app.nothing_recorded') }}" />
+                <x-svg.empty-state alt="{{ __('app.nothing_recorded') }}"/>
             </div>
         @endif
     </div>

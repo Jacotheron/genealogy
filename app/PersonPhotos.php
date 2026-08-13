@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Alignment;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Exceptions\InvalidArgumentException;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
 use RuntimeException;
@@ -32,6 +33,8 @@ final class PersonPhotos
 
     /**
      * @param  array{sizes?: array<string, array{width: int, height: int, quality?: int}>, add_watermark?: bool}|null  $uploadConfig
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(
         private readonly Person $person,
@@ -244,10 +247,10 @@ final class PersonPhotos
                 'name'         => $filename,
                 'extension'    => pathinfo($basename, PATHINFO_EXTENSION),
                 'is_primary'   => $filename === $this->person->photo,
-                'url_original' => $this->photosDisk->url("{$basePath}/{$basename}"),
-                'url_large'    => $this->photosDisk->url("{$basePath}/{$filename}_large.webp"),
-                'url_medium'   => $this->photosDisk->url("{$basePath}/{$filename}_medium.webp"),
-                'url_small'    => $this->photosDisk->url("{$basePath}/{$filename}_small.webp"),
+                'url_original' => $this->photosDisk->url("$basePath/$basename"),
+                'url_large'    => $this->photosDisk->url("$basePath/{$filename}_large.webp"),
+                'url_medium'   => $this->photosDisk->url("$basePath/{$filename}_medium.webp"),
+                'url_small'    => $this->photosDisk->url("$basePath/{$filename}_small.webp"),
             ];
         }
 
@@ -403,7 +406,7 @@ final class PersonPhotos
 
             $isMatch = match ($sizeKey) {
                 'original' => $this->isOriginalPhoto($basename),
-                default    => str_contains($basename, "_{$sizeKey}.")
+                default    => str_contains($basename, "_$sizeKey.")
             };
 
             if ($isMatch) {
@@ -584,7 +587,7 @@ final class PersonPhotos
         bool $includeExtension = true,
         string $extension = 'webp'
     ): string {
-        $suffix = $sizeKey !== 'original' ? "_{$sizeKey}" : '';
+        $suffix = $sizeKey !== 'original' ? "_$sizeKey" : '';
 
         $filename = sprintf(
             '%s_%03d_%s%s',
@@ -607,7 +610,7 @@ final class PersonPhotos
      *
      * @param  mixed  $image  The Intervention Image instance
      */
-    private function applyWatermark($image): void
+    private function applyWatermark(mixed $image): void
     {
         if (! ($this->uploadConfig['add_watermark'] ?? false)) {
             return;
@@ -688,7 +691,7 @@ final class PersonPhotos
         $content = file_get_contents($photo);
 
         if ($content === false) {
-            throw new RuntimeException("Failed to read file: {$photo}");
+            throw new RuntimeException("Failed to read file: $photo");
         }
 
         return $content;
@@ -706,13 +709,13 @@ final class PersonPhotos
         if ($photo instanceof UploadedFile) {
             $extension = mb_strtolower($photo->getClientOriginalExtension() ?: $photo->extension() ?: 'jpg');
 
-            return in_array($extension, $allowedExtensions) ? $extension : 'jpg';
+            return in_array($extension, $allowedExtensions, true) ? $extension : 'jpg';
         }
 
         if (file_exists($photo)) {
             $extension = mb_strtolower(pathinfo($photo, PATHINFO_EXTENSION) ?: 'jpg');
 
-            return in_array($extension, $allowedExtensions) ? $extension : 'jpg';
+            return in_array($extension, $allowedExtensions, true) ? $extension : 'jpg';
         }
 
         return 'jpg';
@@ -739,7 +742,7 @@ final class PersonPhotos
         $mimeType     = $file->getMimeType();
         $allowedMimes = array_keys(config('app.upload_photo_accept'));
 
-        if (! in_array($mimeType, $allowedMimes)) {
+        if (! in_array($mimeType, $allowedMimes, true)) {
             Log::warning('Invalid MIME type detected', [
                 'person_id' => $this->person->id,
                 'file'      => $file->getClientOriginalName(),
@@ -764,7 +767,7 @@ final class PersonPhotos
             // Verify the image type matches expected types
             $allowedImageTypes = config('app.upload_photo_validation.image_types');
 
-            if (! in_array($imageInfo[2], $allowedImageTypes)) {
+            if (! in_array($imageInfo[2], $allowedImageTypes, true)) {
                 Log::warning('Image type not allowed', [
                     'person_id' => $this->person->id,
                     'file'      => $file->getClientOriginalName(),
@@ -787,7 +790,7 @@ final class PersonPhotos
         $extension         = mb_strtolower($file->getClientOriginalExtension());
         $allowedExtensions = config('app.upload_photo_validation.extensions');
 
-        if (! in_array($extension, $allowedExtensions)) {
+        if (! in_array($extension, $allowedExtensions, true)) {
             Log::warning('Invalid file extension', [
                 'person_id' => $this->person->id,
                 'file'      => $file->getClientOriginalName(),

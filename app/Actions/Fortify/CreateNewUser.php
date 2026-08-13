@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Fortify;
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +11,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
-use RuntimeException;
 use Throwable;
 
 final class CreateNewUser implements CreatesNewUsers
@@ -40,7 +38,7 @@ final class CreateNewUser implements CreatesNewUsers
         ])->validate();
 
         $invitationModel = Jetstream::teamInvitationModel();
-        $invitation      = $invitationModel::where('email', $input['email'])
+        $invitation      = $invitationModel::query()->where('email', $input['email'])
             ->where('token', $input['token'])
             ->first();
 
@@ -50,7 +48,7 @@ final class CreateNewUser implements CreatesNewUsers
             ]);
         }
 
-        return DB::transaction(fn () => tap(User::create([
+        return DB::transaction(fn () => tap(User::query()->create([
             'firstname' => $input['firstname'] ?? null,
             'surname'   => $input['surname'],
             'email'     => $input['email'],
@@ -59,6 +57,8 @@ final class CreateNewUser implements CreatesNewUsers
             'password'  => $input['password'],
         ]), function (User $user): void {
             $this->createTeam($user);
+            $user->email_verified_at = now(); // since the user registered using an emailed token, we can assume the email works
+            $user->save();
         }));
     }
 
@@ -67,21 +67,21 @@ final class CreateNewUser implements CreatesNewUsers
      */
     protected function createTeam(User $user): void
     {
-        return; // we do not need each user to have their own team
-        /** @var Team $team */
-        $team = $user->ownedTeams()->save(Team::forceCreate([
-            'user_id'       => $user->id,
-            'name'          => 'Team ' . $user->name,
-            'personal_team' => true,
-        ]));
-
-        if (! $team) {
-            throw new RuntimeException('Failed to create team for user');
-        }
-
-        // Set the current_team_id to the newly created personal team
-        $user->forceFill([
-            'current_team_id' => $team->id,
-        ])->save();
+        //        return; // we do not need each user to have their own team
+        //        /** @var Team $team */
+        //        $team = $user->ownedTeams()->save(Team::forceCreate([
+        //            'user_id'       => $user->id,
+        //            'name'          => 'Team ' . $user->name,
+        //            'personal_team' => true,
+        //        ]));
+        //
+        //        if (! $team) {
+        //            throw new RuntimeException('Failed to create team for user');
+        //        }
+        //
+        //        // Set the current_team_id to the newly created personal team
+        //        $user->forceFill([
+        //            'current_team_id' => $team->id,
+        //        ])->save();
     }
 }

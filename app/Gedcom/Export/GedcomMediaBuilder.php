@@ -124,7 +124,7 @@ class GedcomMediaBuilder
     {
         $gedcom = '';
 
-        foreach ($this->mediaObjects as $personId => $mediaList) {
+        foreach ($this->mediaObjects as $mediaList) {
             foreach ($mediaList as $media) {
                 $gedcom .= $this->buildMediaRecord($media);
             }
@@ -144,7 +144,7 @@ class GedcomMediaBuilder
      */
     private function getPersonImages(Person $person): array
     {
-        $directory = "{$person->team_id}/{$person->id}";
+        $directory = "$person->team_id/$person->id";
 
         if (! Storage::disk('photos')->exists($directory)) {
             return [];
@@ -220,9 +220,7 @@ class GedcomMediaBuilder
     {
         // Convert filename to readable title
         $title = str_replace(['_', '-'], ' ', $filename);
-        $title = ucwords($title);
-
-        return $title;
+        return ucwords($title);
     }
 
     /**

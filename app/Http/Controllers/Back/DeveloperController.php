@@ -25,7 +25,8 @@ final class DeveloperController extends Controller
     {
         $months = 2;
 
-        $userlogs_by_date = Userlog::select(['userlogs.country_name', 'userlogs.country_code', 'userlogs.created_at', 'users.surname', 'users.firstname'])
+        $userlogs_by_date = Userlog::query()
+            ->select(['userlogs.country_name', 'userlogs.country_code', 'userlogs.created_at', 'users.surname', 'users.firstname'])
             ->leftjoin('users', 'userlogs.user_id', '=', 'users.id')
             ->where('userlogs.created_at', '>=', today()->startOfMonth()->subMonths($months))
             ->orderByDesc('userlogs.created_at')
@@ -42,10 +43,12 @@ final class DeveloperController extends Controller
     {
         $title = __('userlog.users_by_country');
 
-        $statistics = Userlog::select('country_name')
+        $statistics = Userlog::query()
+            ->select('country_name')
             ->selectRaw('COUNT(*) AS visitors')
             ->groupBy('country_name')
-            ->orderByDesc('visitors')->orderBy('country_name')
+            ->orderByDesc('visitors')
+            ->orderBy('country_name')
             ->get();
 
         $labels = $statistics->pluck('country_name')->toArray();
@@ -63,9 +66,10 @@ final class DeveloperController extends Controller
         $title  = __('userlog.visitors');
         $nodata = __('app.nothing_recorded');
 
-        $countries = (new Countries(app()->getLocale()))->getCountryNamesForSvgMap();
+        $countries = new Countries(app()->getLocale())->getCountryNamesForSvgMap();
 
-        $data = Userlog::select('country_code')
+        $data = Userlog::query()
+            ->select('country_code')
             ->selectRaw('COUNT(*) AS visitors')
             ->groupBy('country_code')
             ->get()
@@ -87,7 +91,8 @@ final class DeveloperController extends Controller
     {
         $title = __('userlog.visitors');
 
-        $statistics_year = Userlog::selectRaw('YEAR(created_at) AS period')
+        $statistics_year = Userlog::query()
+            ->selectRaw('YEAR(created_at) AS period')
             ->selectRaw('COUNT(*) AS visitors')
             ->groupBy('period')
             ->orderBy('period')
@@ -96,14 +101,16 @@ final class DeveloperController extends Controller
         $statistics_year_labels = $statistics_year->pluck('period')->toArray();
         $statistics_year_values = $statistics_year->pluck('visitors')->toArray();
 
-        $statistics_month = Userlog::selectRaw('MONTH(created_at) AS period')
-            ->selectRaw('COUNT(*) AS visitors')
-            ->whereYear('created_at', date('Y'))
-            ->groupBy('period')
-            ->orderBy('period')
-            ->get();
+        //        $statistics_month = Userlog::query()
+        //            ->selectRaw('MONTH(created_at) AS period')
+        //            ->selectRaw('COUNT(*) AS visitors')
+        //            ->whereYear('created_at', date('Y'))
+        //            ->groupBy('period')
+        //            ->orderBy('period')
+        //            ->get();
 
-        $statistics_month = Userlog::selectRaw('LPAD(MONTH(created_at), 2, 0) AS period')
+        $statistics_month = Userlog::query()
+            ->selectRaw('LPAD(MONTH(created_at), 2, 0) AS period')
             ->selectRaw('COUNT(*) AS visitors')
             ->whereYear('created_at', date('Y'))
             ->groupBy('period')
@@ -113,7 +120,8 @@ final class DeveloperController extends Controller
         $statistics_month_labels = $statistics_month->pluck('period')->toArray();
         $statistics_month_values = $statistics_month->pluck('visitors')->toArray();
 
-        $statistics_week = Userlog::selectRaw('LPAD(WEEK(created_at, 3), 2, 0) AS period')
+        $statistics_week = Userlog::query()
+            ->selectRaw('LPAD(WEEK(created_at, 3), 2, 0) AS period')
             ->selectRaw('COUNT(*) AS visitors')
             ->whereYear('created_at', date('Y'))
             ->groupBy('period')

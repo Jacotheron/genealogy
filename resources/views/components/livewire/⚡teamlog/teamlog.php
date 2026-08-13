@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,7 +16,7 @@ new class extends Component
 
     // -----------------------------------------------------------------------
     #[Computed]
-    public function activities()
+    public function activities(): LengthAwarePaginator
     {
         $timezone = session('timezone', 'UTC');
 
@@ -24,10 +25,11 @@ new class extends Component
             abort(403, 'No team access');
         }
 
-        $paginator = Activity::with('causer')
+        $paginator = Activity::query()
+            ->with('causer')
             ->where('log_name', 'user_team')
             ->where('team_id', $user->currentTeam->id)
-            ->where('updated_at', '>=', today()->startOfMonth()->subMonths(1))
+            ->where('updated_at', '>=', today()->startOfMonth()->subMonths())
             ->orderBy('updated_at', 'desc')
             ->paginate($this->perPage);
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" {!! $attributes !!} viewBox="0 0 512 512" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" {!! $attributes !!} viewBox="0 0 512 512">
     <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
         <path
             d="M1211 4516 c-48 -17 -108 -71 -134 -119 l-22 -42 0 -1795 0 -1795 22

@@ -40,7 +40,8 @@ new class extends Component
     {
         $this->loadData();
 
-        $this->persons = Person::partnerOffset($this->person->dob, $this->person->yob)
+        $this->persons = Person::query()
+            ->partnerOffset($this->person->dob, $this->person->yob)
             ->where('id', '!=', $this->person->id)
             ->orderBy('firstname')->orderBy('surname')
             ->get()

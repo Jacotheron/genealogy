@@ -41,7 +41,8 @@ new class extends Component
     {
         $this->loadData();
 
-        $persons = Person::where('id', '!=', $this->person->id)
+        $persons = Person::query()
+            ->where('id', '!=', $this->person->id)
             ->olderThan($this->person->dob, $this->person->yob)
             ->orderBy('firstname')->orderBy('surname')
             ->get();
@@ -56,7 +57,8 @@ new class extends Component
             'name' => $p->name . ($p->birth_formatted ? ' (' . $p->birth_formatted . ')' : ''),
         ])->values();
 
-        $this->parents = Couple::with(['person1', 'person2'])
+        $this->parents = Couple::query()
+            ->with(['person1', 'person2'])
             ->olderThan($this->person->birthYear)
             ->get()
             ->sortBy('name')

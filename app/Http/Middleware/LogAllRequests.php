@@ -8,12 +8,15 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Symfony\Component\HttpFoundation\Response;
 
 final class LogAllRequests
 {
     /**
      * Handle an incoming request.
+     *
+     * @throws JsonException
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -25,7 +28,7 @@ final class LogAllRequests
         $timestamp = Carbon::now()->toDateTimeString();
 
         // Collect response content if available
-        $responseData = json_decode((string) $response->getContent(), true, 512) ?? [];
+        $responseData = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR) ?? [];
 
         // Prepare log data
         $logData = [

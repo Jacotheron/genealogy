@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use TallStackUi\Traits\Interactions;
+use Throwable;
 
 final class TeamController extends Controller
 {
@@ -40,17 +41,17 @@ final class TeamController extends Controller
         /** @var User $currentOwner */
         $currentOwner = $team->owner;
         /** @var User $newOwner */
-        $newOwner = User::findOrFail($validated['new_owner_id']);
+        $newOwner = User::query()
+            ->findOrFail($validated['new_owner_id']);
 
         // 3. The designated new owner must already be a member of this team.
         if (! $newOwner->belongsToTeam($team)) {
             abort(422, 'The new owner must already be a member of this team.');
         }
 
-        /** @var User $currentOwner */
-        $currentOwner = $team->owner;
         /** @var User $newOwner */
-        $newOwner = User::findOrFail($validated['new_owner_id']);
+        $newOwner = User::query()
+            ->findOrFail($validated['new_owner_id']);
 
         try {
             DB::transaction(function () use ($team, $currentOwner, $newOwner): void {
@@ -78,7 +79,7 @@ final class TeamController extends Controller
                 /* -------------------------------------------------------------------------------------------- */
                 // Log activity: Transfer Team Membership
                 /* -------------------------------------------------------------------------------------------- */
-                defer(function () use ($team, $currentOwner, $newOwner): void {
+                defer(static function () use ($team, $currentOwner, $newOwner): void {
                     activity()
                         ->useLog('user_team')
                         ->performedOn($team)
@@ -99,6 +100,7 @@ final class TeamController extends Controller
             });
         } catch (Exception) {
             $this->toast()->error(__('team.transfer'), __('team.transfer_failed'))->flash()->send();
+        } catch (Throwable $e) {
         }
 
         return back();

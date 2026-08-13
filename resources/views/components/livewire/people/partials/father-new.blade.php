@@ -48,7 +48,7 @@
             <div class="col-span-6 md:col-span-3">
                 <x-label for="sex" class="mr-5" value="{{ __('person.sex') }} ({{ __('person.biological') }}) :" />
                 <div class="flex">
-                    <div class="mt-3 mr-4 mb-[0.125rem] inline-block min-h-[1.5rem] pl-[1.5rem] text-gray-700">
+                    <div class="mt-3 mr-4 mb-0.5 inline-block min-h-6 pl-6 text-gray-700">
                         {{ __('app.male') }}
                     </div>
                 </div>

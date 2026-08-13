@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Route;
 // -----------------------------------------------------------------------------------
 // frontend routes
 // -----------------------------------------------------------------------------------
-//Route::livewire('password-generator', 'livewire::password-generator')->name('password.generator');
+// Route::livewire('password-generator', 'livewire::password-generator')->name('password.generator');
 
-Route::redirect('/search', '/', 302)->name('people.search');
+Route::redirect('/search', '/')->name('people.search');
 
 Route::controller(App\Http\Controllers\Front\PageController::class)->group(function (): void {
     //    Route::get('/', 'home')->name('home');
@@ -69,8 +69,8 @@ Route::middleware([
     // -----------------------------------------------------------------------------------
     // gedcom
     // -----------------------------------------------------------------------------------
-//    Route::livewire('exportteam', 'gedcom::exportteam')->name('gedcom.exportteam');
-//    Route::livewire('importteam', 'gedcom::importteam')->name('gedcom.importteam');
+    //    Route::livewire('exportteam', 'gedcom::exportteam')->name('gedcom.exportteam');
+    //    Route::livewire('importteam', 'gedcom::importteam')->name('gedcom.importteam');
 
     // -----------------------------------------------------------------------------------
     // developer

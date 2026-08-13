@@ -7,10 +7,14 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Userlog;
 use Illuminate\Database\Seeder;
+use Random\RandomException;
 use Spatie\Activitylog\Facades\Activity;
 
 final class UserSeeder extends Seeder
 {
+    /**
+     * @throws RandomException
+     */
     public function run(): void
     {
         // -----------------------------------------------------------------------------------
@@ -110,6 +114,10 @@ final class UserSeeder extends Seeder
     }
 
     // -----------------------------------------------------------------------------------
+
+    /**
+     * @throws RandomException
+     */
     protected function createUserlogs(User $user): void
     {
         $count = random_int(10, 100);

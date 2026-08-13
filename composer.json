@@ -49,7 +49,10 @@
         "spatie/laravel-medialibrary": "^11.23",
         "stefangabos/world_countries": "^3.3",
         "stevebauman/location": "^7.6",
-        "tallstackui/tallstackui": "^3.5"
+        "tallstackui/tallstackui": "^3.5",
+        "ext-zip": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.4",

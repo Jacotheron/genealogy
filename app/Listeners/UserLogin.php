@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Models\User;
 use App\Models\Userlog;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Stevebauman\Location\Facades\Location;
 
@@ -15,7 +17,7 @@ final class UserLogin
      */
     public function handle(Login $event): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $event->user;
 
         // -----------------------------------------------------------------------
@@ -30,15 +32,15 @@ final class UserLogin
         // Update user's last seen timestamp
         // -----------------------------------------------------------------------
         $user->timestamps = false;
-        $user->seen_at    = \Carbon\Carbon::now();
+        $user->seen_at    = Carbon::now();
         $user->saveQuietly();
 
         // -----------------------------------------------------------------------
         // Log user location (only in production)
         // -----------------------------------------------------------------------
-//        if (app()->isProduction()) {
-//            $this->logUserLocation($user->id);
-//        }
+        if (app()->isProduction()) {
+            $this->logUserLocation($user->id);
+        }
     }
 
     /**
@@ -68,11 +70,12 @@ final class UserLogin
         // Log visitor's location
         // -----------------------------------------------------------------------
         if ($position = Location::get()) {
-            Userlog::create([
-                'user_id'      => $userId,
-                'country_name' => $position->countryName ?? null,
-                'country_code' => $position->countryCode ?? null,
-            ]);
+            Userlog::query()
+                ->create([
+                    'user_id'      => $userId,
+                    'country_name' => $position->countryName ?? null,
+                    'country_code' => $position->countryCode ?? null,
+                ]);
         }
     }
 }

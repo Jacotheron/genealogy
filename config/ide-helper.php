@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Session\Store;
+
 return [
 
     /*
@@ -183,7 +185,7 @@ return [
 
     'extra' => [
         'Eloquent' => ['Illuminate\Database\Eloquent\Builder', 'Illuminate\Database\Query\Builder'],
-        'Session'  => ['Illuminate\Session\Store'],
+        'Session'  => [Store::class],
     ],
 
     'magic' => [],

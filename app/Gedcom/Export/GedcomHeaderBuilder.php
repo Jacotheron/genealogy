@@ -58,7 +58,7 @@ class GedcomHeaderBuilder
             '2 CORP ' . $this->getSourceCorporation(),
             '1 DATE ' . mb_strtoupper($now->format('j M Y')),
             '2 TIME ' . $now->format('H:i:s'),
-            "1 SUBM {$submitterId}",
+            "1 SUBM $submitterId",
             '1 LANG ' . app()->getLocale(),
         ];
 
@@ -80,11 +80,11 @@ class GedcomHeaderBuilder
                    '1 NAME Unknown' . $this->formatter->eol();
         }
 
-        $submitterId = "@I{$submitter->id}@";
+        $submitterId = "@I$submitter->id@";
         $name        = mb_trim(($submitter->firstname ?? '') . ' ' . ($submitter->surname ?? ''));
 
-        return "0 {$submitterId} SUBM" . $this->formatter->eol() .
-               "1 NAME {$name}" . $this->formatter->eol();
+        return "0 $submitterId SUBM" . $this->formatter->eol() .
+               "1 NAME $name" . $this->formatter->eol();
     }
 
     // --------------------------------------------------------------------------------------

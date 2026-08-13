@@ -37,12 +37,12 @@ final class InviteTeamMember implements InvitesTeamMembers
             'role'  => $role,
         ]);
 
-        Mail::to($email)->send(new TeamInvitation($invitation));
+        Mail::to($email)->queue(new TeamInvitation($invitation));
 
         /* -------------------------------------------------------------------------------------------- */
         // Log activity: Invite Team Member
         /* -------------------------------------------------------------------------------------------- */
-        defer(function () use ($user, $team, $email, $role): void {
+        defer(static function () use ($user, $team, $email, $role): void {
             activity()
                 ->useLog('user_team')
                 ->performedOn($team)
@@ -95,7 +95,7 @@ final class InviteTeamMember implements InvitesTeamMembers
      */
     private function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
     {
-        return function ($validator) use ($team, $email): void {
+        return static function ($validator) use ($team, $email): void {
             $validator->errors()->addIf(
                 $team->hasUserWithEmail($email),
                 'email',

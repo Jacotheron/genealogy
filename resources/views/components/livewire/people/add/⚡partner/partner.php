@@ -42,7 +42,8 @@ new class extends Component
 
     public function mount(): void
     {
-        $this->persons = Person::partnerOffset($this->person->dob, $this->person->yob)
+        $this->persons = Person::query()
+            ->partnerOffset($this->person->dob, $this->person->yob)
             ->where('id', '!=', $this->person->id)
             ->orderBy('firstname')
             ->orderBy('surname')
@@ -91,7 +92,7 @@ new class extends Component
      */
     protected function linkExistingPartner(array $validated): void
     {
-        $couple = Couple::create([
+        $couple = Couple::query()->create([
             'person1_id' => $this->person->id,
             'person2_id' => $validated['form']['person_id'],
             'date_start' => $validated['date_start'] ?? null,
@@ -117,11 +118,11 @@ new class extends Component
             'birthname' => $validated['form']['birthname'],
             'nickname'  => $validated['form']['nickname'],
             'sex'       => $validated['form']['sex'],
-//            'gender_id' => $validated['form']['gender_id'] ?? null,
-            'yob'       => $validated['form']['yob'],
-            'dob'       => $validated['form']['dob'],
-            'pob'       => $validated['form']['pob'],
-            'team_id'   => $this->person->team_id,
+            //            'gender_id' => $validated['form']['gender_id'] ?? null,
+            'yob'     => $validated['form']['yob'],
+            'dob'     => $validated['form']['dob'],
+            'pob'     => $validated['form']['pob'],
+            'team_id' => $this->person->team_id,
         ]);
 
         // Handle photo uploads if present
@@ -131,7 +132,7 @@ new class extends Component
 
         $this->toast()->success(__('app.create'), e($newPartner->name) . ' ' . __('app.created') . '.')->send();
 
-        $newCouple = Couple::create([
+        $newCouple = Couple::query()->create([
             'person1_id' => $this->person->id,
             'person2_id' => $newPartner->id,
             'date_start' => $validated['date_start'] ?? null,
@@ -157,10 +158,10 @@ new class extends Component
             'form.birthname' => ['nullable', 'string', 'max:255'],
             'form.nickname'  => ['nullable', 'string', 'max:255'],
             'form.sex'       => ['nullable', 'string', 'max:1', 'in:m,f', 'required_without:form.person_id', 'required_with:form.surname'],
-//            'form.gender_id' => ['nullable', 'integer'],
-            'form.yob'       => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
-            'form.dob'       => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
-            'form.pob'       => ['nullable', 'string', 'max:255'],
+            //            'form.gender_id' => ['nullable', 'integer'],
+            'form.yob' => ['nullable', 'integer', 'min:1', 'max:' . date('Y'), new YobValid],
+            'form.dob' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today', new DobValid],
+            'form.pob' => ['nullable', 'string', 'max:255'],
 
             'form.person_id' => ['nullable', 'integer', 'required_without_all:form.surname,form.sex', 'exists:people,id'],
 
@@ -195,10 +196,10 @@ new class extends Component
             'form.birthname' => __('person.birthname'),
             'form.nickname'  => __('person.nickname'),
             'form.sex'       => __('person.sex'),
-//            'form.gender_id' => __('person.gender'),
-            'form.yob'       => __('person.yob'),
-            'form.dob'       => __('person.dob'),
-            'form.pob'       => __('person.pob'),
+            //            'form.gender_id' => __('person.gender'),
+            'form.yob' => __('person.yob'),
+            'form.dob' => __('person.dob'),
+            'form.pob' => __('person.pob'),
 
             'form.person_id' => __('person.person'),
 

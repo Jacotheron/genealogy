@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use FilesystemIterator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RuntimeException;
 
 class MigratePhotos extends Command
 {
@@ -112,9 +114,9 @@ class MigratePhotos extends Command
         // Create backups before migration
         $this->createBackups($basePath, $dryRun);
 
-        $photosRoot    = "{$basePath}/photos";
-        $photos096Root = "{$basePath}/photos-096";
-        $photos384Root = "{$basePath}/photos-384";
+        $photosRoot    = $basePath . '/photos';
+        $photos096Root = $basePath . '/photos-096';
+        $photos384Root = $basePath . '/photos-384';
 
         if (! is_dir($photosRoot)) {
             $this->error('❌ Main photos folder not found. Cannot proceed with migration.');
@@ -133,54 +135,51 @@ class MigratePhotos extends Command
                 continue;
             }
 
-            $relativePath = Str::after($originalPath, "{$photosRoot}/");
+            $relativePath = Str::after($originalPath, $photosRoot . '/');
             $parts        = explode('/', $relativePath);
 
             if (count($parts) < 2) {
-                $this->warn("⚠ Unexpected file structure: {$relativePath}");
+                $this->warn('⚠ Unexpected file structure: ' . $relativePath);
                 $skippedCount++;
                 continue;
             }
 
-            $teamId       = $parts[0];
-            $filename     = $parts[1];
-            $personId     = Str::before($filename, '_');
-            $extension    = pathinfo($filename, PATHINFO_EXTENSION);
-            $baseFilename = pathinfo($filename, PATHINFO_FILENAME);
+            [$teamId, $filename] = $parts;
+            $personId            = Str::before($filename, '_');
+            $extension           = pathinfo($filename, PATHINFO_EXTENSION);
+            $baseFilename        = pathinfo($filename, PATHINFO_FILENAME);
 
             // Build paths for all variants
-            $newDir          = "{$basePath}/photos/{$teamId}/{$personId}";
-            $newOriginalPath = "{$newDir}/{$filename}";
-            $newLargePath    = "{$newDir}/{$baseFilename}_large.{$extension}";
-            $newMediumPath   = "{$newDir}/{$baseFilename}_medium.{$extension}";
-            $newSmallPath    = "{$newDir}/{$baseFilename}_small.{$extension}";
+            $newDir          = "$basePath/photos/$teamId/$personId";
+            $newOriginalPath = "$newDir/$filename";
+            $newLargePath    = "$newDir/{$baseFilename}_large.$extension";
+            $newMediumPath   = "$newDir/{$baseFilename}_medium.$extension";
+            $newSmallPath    = "$newDir/{$baseFilename}_small.$extension";
 
             // Find corresponding files in other folders (optional)
-            $mediumPath = "{$photos384Root}/{$teamId}/{$filename}";
-            $smallPath  = "{$photos096Root}/{$teamId}/{$filename}";
+            $mediumPath = "$photos384Root/$teamId/$filename";
+            $smallPath  = "$photos096Root/$teamId/$filename";
 
             if ($dryRun) {
-                $this->line("[DRY] Processing: {$baseFilename}");
-                $this->line("[DRY]   Original: {$originalPath} → {$newOriginalPath}");
-                $this->line("[DRY]   Large:    {$originalPath} → {$newLargePath}");
+                $this->line("[DRY] Processing: $baseFilename");
+                $this->line("[DRY]   Original: $originalPath → $newOriginalPath");
+                $this->line("[DRY]   Large:    $originalPath → $newLargePath");
 
                 if (file_exists($mediumPath)) {
-                    $this->line("[DRY]   Medium:   {$mediumPath} → {$newMediumPath}");
+                    $this->line("[DRY]   Medium:   $mediumPath → $newMediumPath");
                 } else {
                     $this->line('[DRY]   Medium:   ⚠ Not found, skipping');
                 }
 
                 if (file_exists($smallPath)) {
-                    $this->line("[DRY]   Small:    {$smallPath} → {$newSmallPath}");
+                    $this->line("[DRY]   Small:    $smallPath → $newSmallPath");
                 } else {
                     $this->line('[DRY]   Small:    ⚠ Not found, skipping');
                 }
-
-                $migratedCount++;
             } else {
                 // Create directory if needed
-                if (! is_dir($newDir)) {
-                    mkdir($newDir, 0755, true);
+                if (! is_dir($newDir) && ! mkdir($newDir, 0755, true) && ! is_dir($newDir)) {
+                    throw new RuntimeException(sprintf('Directory "%s" was not created', $newDir));
                 }
 
                 // Copy original file (no suffix)
@@ -204,37 +203,36 @@ class MigratePhotos extends Command
                 // Delete original after successful copy
                 unlink($originalPath);
 
-                $this->line("✔ Migrated: {$baseFilename}");
-                $migratedCount++;
+                $this->line("✔ Migrated: $baseFilename");
             }
+            $migratedCount++;
         }
 
         // Cleanup old folders
         if (! $dryRun) {
             if (is_dir($photos096Root)) {
-                $this->cleanupFolder($photos096Root, false);
+                $this->cleanupFolder($photos096Root);
             }
             if (is_dir($photos384Root)) {
-                $this->cleanupFolder($photos384Root, false);
+                $this->cleanupFolder($photos384Root);
             }
         } else {
-            $this->line("[DRY] Would cleanup: {$photos096Root}");
-            $this->line("[DRY] Would cleanup: {$photos384Root}");
+            $this->line("[DRY] Would cleanup: $photos096Root");
+            $this->line("[DRY] Would cleanup: $photos384Root");
         }
 
         $this->newLine();
         $this->info('✅ Migration completed!');
-        $this->info("   Photos migrated: {$migratedCount}");
+        $this->info("   Photos migrated: $migratedCount");
 
         if ($skippedCount > 0) {
-            $this->warn("   Photos skipped: {$skippedCount}");
+            $this->warn("   Photos skipped: $skippedCount");
         }
 
+        $this->newLine();
         if ($dryRun) {
-            $this->newLine();
             $this->info('💡 This was a DRY RUN. Run without --dry-run to perform actual migration.');
         } else {
-            $this->newLine();
             $this->info('💡 Migration successful! Your photos are now organized in the new structure.');
             $this->info('   - Originals are preserved as .webp files');
             $this->info('   - Large, medium, and small variants are created');
@@ -249,8 +247,8 @@ class MigratePhotos extends Command
      */
     private function hasMigrationAlreadyRun(string $basePath): bool
     {
-        $photos096Exists = is_dir("{$basePath}/photos-096");
-        $photos384Exists = is_dir("{$basePath}/photos-384");
+        $photos096Exists = is_dir("$basePath/photos-096");
+        $photos384Exists = is_dir("$basePath/photos-384");
 
         // If both folders are missing, migration has likely been completed
         return ! $photos096Exists && ! $photos384Exists;
@@ -272,13 +270,13 @@ class MigratePhotos extends Command
                 continue;
             }
 
-            $teamPath = "{$dir}/{$teamId}";
+            $teamPath = "$dir/$teamId";
             if (! is_dir($teamPath)) {
                 continue;
             }
 
             foreach (scandir($teamPath) as $file) {
-                if (in_array($file, ['.', '..']) || $file === '.gitignore') {
+                if ($file === '.gitignore' || in_array($file, ['.', '..'])) {
                     continue;
                 }
 
@@ -286,11 +284,11 @@ class MigratePhotos extends Command
                 $extension       = mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
                 $validExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'tiff', 'svg'];
 
-                if (! in_array($extension, $validExtensions)) {
+                if (! in_array($extension, $validExtensions, true)) {
                     continue;
                 }
 
-                $files[] = "{$teamPath}/{$file}";
+                $files[] = "$teamPath/$file";
             }
         }
 
@@ -304,15 +302,15 @@ class MigratePhotos extends Command
         }
 
         if ($dryRun) {
-            $this->line("[DRY] Would delete folder and contents: {$folderPath}");
+            $this->line("[DRY] Would delete folder and contents: $folderPath");
 
             return;
         }
 
-        $globResult     = glob("{$folderPath}/*");
+        $globResult     = glob("$folderPath/*");
         $remainingFiles = array_filter(
             $globResult !== false ? $globResult : [],
-            fn ($file) => basename($file) !== '.gitignore'
+            static fn ($file) => basename($file) !== '.gitignore'
         );
 
         foreach ($remainingFiles as $item) {
@@ -324,7 +322,7 @@ class MigratePhotos extends Command
         }
 
         // Delete .gitignore if present
-        $gitignore = "{$folderPath}/.gitignore";
+        $gitignore = "$folderPath/.gitignore";
         if (is_file($gitignore)) {
             unlink($gitignore);
         }
@@ -332,16 +330,16 @@ class MigratePhotos extends Command
         // Remove folder if empty
         if (count(scandir($folderPath)) <= 2) {
             @rmdir($folderPath);
-            $this->line("🧹 Deleted folder: {$folderPath}");
+            $this->line("🧹 Deleted folder: $folderPath");
         } else {
-            $this->warn("⚠ Not removing {$folderPath}, still contains files.");
+            $this->warn("⚠ Not removing $folderPath, still contains files.");
         }
     }
 
     private function deleteDirectory(string $dir): void
     {
-        $globVisible = glob("{$dir}/*");
-        $globHidden  = glob("{$dir}/.*");
+        $globVisible = glob("$dir/*");
+        $globHidden  = glob("$dir/.*");
 
         $items = array_merge(
             $globVisible !== false ? $globVisible : [],
@@ -373,39 +371,39 @@ class MigratePhotos extends Command
     private function createBackups(string $basePath, bool $dryRun = false): void
     {
         $timestamp  = date('Y-m-d_H-i-s');
-        $backupRoot = "{$basePath}/photo-backups/{$timestamp}";
+        $backupRoot = "$basePath/photo-backups/$timestamp";
 
         $foldersToBackup = ['photos', 'photos-096', 'photos-384'];
         $hasBackups      = false;
 
         foreach ($foldersToBackup as $folderName) {
-            $sourcePath = "{$basePath}/{$folderName}";
-            $backupPath = "{$backupRoot}/{$folderName}";
+            $sourcePath = "$basePath/$folderName";
+            $backupPath = "$backupRoot/$folderName";
 
             if (! is_dir($sourcePath)) {
                 continue;
             }
 
             if ($dryRun) {
-                $this->line("[DRY] Would create backup: {$sourcePath} → {$backupPath}");
+                $this->line("[DRY] Would create backup: $sourcePath → $backupPath");
                 $hasBackups = true;
                 continue;
             }
 
             // Create backup directory structure
-            if (! is_dir($backupRoot)) {
-                mkdir($backupRoot, 0755, true);
+            if (! is_dir($backupRoot) && ! mkdir($backupRoot, 0755, true) && ! is_dir($backupRoot)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $backupRoot));
             }
 
             // Copy entire folder structure
             $this->copyDirectory($sourcePath, $backupPath);
-            $this->line("📦 Created backup: {$folderName} → photo-backups/{$timestamp}/{$folderName}");
+            $this->line("📦 Created backup: $folderName → photo-backups/$timestamp/$folderName");
             $hasBackups = true;
         }
 
         if ($hasBackups) {
             $prefix = $dryRun ? '[DRY] ' : '';
-            $this->info("{$prefix}✅ Backup completed. Files saved to: photo-backups/{$timestamp}/");
+            $this->info("{$prefix}✅ Backup completed. Files saved to: photo-backups/$timestamp/");
         } else {
             $this->warn('⚠ No folders found to backup.');
         }
@@ -416,12 +414,12 @@ class MigratePhotos extends Command
      */
     private function copyDirectory(string $source, string $destination): void
     {
-        if (! is_dir($destination)) {
-            mkdir($destination, 0755, true);
+        if (! is_dir($destination) && ! mkdir($destination, 0755, true) && ! is_dir($destination)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $destination));
         }
 
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+            new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::SELF_FIRST
         );
 
@@ -429,8 +427,8 @@ class MigratePhotos extends Command
             $targetPath = $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
 
             if ($item->isDir()) {
-                if (! is_dir($targetPath)) {
-                    mkdir($targetPath, 0755, true);
+                if (! is_dir($targetPath) && ! mkdir($targetPath, 0755, true) && ! is_dir($targetPath)) {
+                    throw new RuntimeException(sprintf('Directory "%s" was not created', $targetPath));
                 }
             } else {
                 copy($item->getRealPath(), $targetPath);

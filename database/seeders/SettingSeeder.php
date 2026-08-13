@@ -21,6 +21,6 @@ final class SettingSeeder extends Seeder
             ['key' => 'log_all_queries_nplusone', 'value' => true],
         ];
 
-        Setting::insert($settingsData);
+        Setting::query()->insert($settingsData);
     }
 }
