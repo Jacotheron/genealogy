@@ -93,19 +93,19 @@ final class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             Model::handleLazyLoadingViolationUsing(static function (Model $model, mixed $value) {
                 Log::notice("Strictness Violation: Lazy Loading: {$model->getTable()}.{$model->getKey()}: relationship: $value", [
-                    'url' => request()->fullUrl(),
+                    'url'  => request()->fullUrl(),
                     'user' => auth()->user() ? auth()->user()->id : 'Guest',
                 ]);
             });
             Model::handleDiscardedAttributeViolationUsing(static function (Model $model, mixed $value) {
-                Log::notice("Strictness Violation: Discarded Attributes: {$model->getTable()}.{$model->getKey()}: attributes: ".implode(', ', $value), [
-                    'url' => request()->fullUrl(),
+                Log::notice("Strictness Violation: Discarded Attributes: {$model->getTable()}.{$model->getKey()}: attributes: " . implode(', ', $value), [
+                    'url'  => request()->fullUrl(),
                     'user' => auth()->user() ? auth()->user()->id : 'Guest',
                 ]);
             });
             Model::handleMissingAttributeViolationUsing(static function (Model $model, mixed $value) {
                 Log::notice("Strictness Violation: Missing Attribute: {$model->getTable()}.{$model->getKey()}: attribute: $value", [
-                    'url' => request()->fullUrl(),
+                    'url'  => request()->fullUrl(),
                     'user' => auth()->user() ? auth()->user()->id : 'Guest',
                 ]);
             });
@@ -317,6 +317,7 @@ final class AppServiceProvider extends ServiceProvider
                     ));
                 });
             }
-        } catch (EntryNotFoundException|CircularDependencyException|NotFoundExceptionInterface|ContainerExceptionInterface) {}
+        } catch (EntryNotFoundException|CircularDependencyException|NotFoundExceptionInterface|ContainerExceptionInterface) {
+        }
     }
 }
