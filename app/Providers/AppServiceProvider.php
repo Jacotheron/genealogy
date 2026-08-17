@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Exception;
+use Filament\Tables\Table;
 use Illuminate\Container\EntryNotFoundException;
 use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +20,11 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Override;
 use Psr\Container\ContainerExceptionInterface;
@@ -47,7 +50,7 @@ final class AppServiceProvider extends ServiceProvider
         // ------------------------------------------------------------------------------
         // Configure application settings and services
         // ------------------------------------------------------------------------------
-        $this->configureUrl();
+        //        $this->configureUrl();
         $this->configureStrictMode();
         $this->configureLogViewer();
         $this->configureDates();
@@ -75,40 +78,145 @@ final class AppServiceProvider extends ServiceProvider
         // ------------------------------------------------------------------------------
         // Enable or disable logging based on application settings
         // ------------------------------------------------------------------------------
-        if ($this->isDatabaseOnline() && Schema::hasTable('settings')) {
-            // Cache the applications settings
-            $this->app->singleton('settings', fn () => Cache::rememberForever('settings', static fn () => Setting::query()
-                ->pluck('value', 'key')));
-
-            $this->logAllQueries();
-            $this->LogAllQueriesSlow();
-            $this->logAllQueriesNplusone();
-        }
+        //        if ($this->isDatabaseOnline() && Schema::hasTable('settings')) {
+        //            // Cache the applications settings
+        //            $this->app->singleton('settings', fn () => Cache::rememberForever('settings', static fn () => Setting::query()
+        //                ->pluck('value', 'key')));
+        //
+        //            $this->logAllQueries();
+        //            $this->LogAllQueriesSlow();
+        //            $this->logAllQueriesNplusone();
+        //        }
         // ------------------------------------------------------------------------------
         Gate::define('viewPulse', static function (User $user) {
             return $user->is_developer;
         });
 
+        // Password Rules
+        Password::defaults(function () {
+            $local_rule = Password::min(8);
+
+            if ($this->app->isProduction()) {
+                return Password::min(10)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised();
+            }
+
+            return $local_rule;
+        });
+
+        // Model Strictness Violations
         Model::shouldBeStrict();
         if (config('app.env') === 'production') {
-            Model::handleLazyLoadingViolationUsing(static function (Model $model, mixed $value) {
-                Log::notice("Strictness Violation: Lazy Loading: {$model->getTable()}.{$model->getKey()}: relationship: $value", [
-                    'url'  => request()->fullUrl(),
-                    'user' => auth()->user() ? auth()->user()->id : 'Guest',
-                ]);
+            // Helper function to find the true culprit line in your code
+            $getAppCaller = static function (): array {
+                $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 30);
+                foreach ($trace as $frame) {
+                    if (isset($frame['file']) &&
+                        Str::contains($frame['file'], base_path('app/')) &&
+                        ! Str::contains($frame['file'], base_path('app/Providers/AppServiceProvider.php'))) {
+                        // Remove the absolute base path to keep logs clean
+                        return [
+                            'file' => str_replace(base_path() . '/', '', $frame['file']),
+                            'line' => $frame['line'] ?? 0,
+                        ];
+                    }
+                }
+
+                return ['file' => 'Unknown App File', 'line' => 0];
+            };
+            $getLivewireContext = static function (): array {
+                $context = [];
+                // Check if it is a Livewire update request
+                if (request()->hasHeader('X-Livewire')) {
+                    $components = request()->input('components', []);
+                    $names      = array_column($components, 'name');
+                    if (! empty($names)) {
+                        $context['livewire_components'] = array_unique($names);
+                    }
+                }
+
+                return $context;
+            };
+            $shouldLogViolation = static function (string $type, Model $model, string $detail, array $caller) {
+                $uniqueString = "strict_violation:$type:{$model->getTable()}:$detail:{$caller['file']}:{$caller['line']}";
+                $cacheKey     = 'log_lock:' . md5($uniqueString);
+                if (Cache::has($cacheKey)) {
+                    return false;
+                }
+
+                Cache::put($cacheKey, true, 3600);
+
+                return true;
+            };
+            Model::handleLazyLoadingViolationUsing(static function (Model $model, mixed $value) use ($getAppCaller, $getLivewireContext, $shouldLogViolation) {
+                $caller = $getAppCaller();
+                if ($shouldLogViolation('lazy_loading', $model, (string) $value, $caller)) {
+                    Log::notice("Strictness Violation: Lazy Loading: {$model->getTable()}.{$model->getKey()}: relationship: $value", [
+                        'file'    => $caller['file'],
+                        'line'    => $caller['line'],
+                        'url'     => request()->fullUrl(),
+                        'user'    => auth()->user() ? auth()->user()->id : 'Guest',
+                        'context' => $getLivewireContext(),
+                    ]);
+                }
             });
-            Model::handleDiscardedAttributeViolationUsing(static function (Model $model, mixed $value) {
-                Log::notice("Strictness Violation: Discarded Attributes: {$model->getTable()}.{$model->getKey()}: attributes: " . implode(', ', $value), [
-                    'url'  => request()->fullUrl(),
-                    'user' => auth()->user() ? auth()->user()->id : 'Guest',
-                ]);
+            Model::handleDiscardedAttributeViolationUsing(static function (Model $model, mixed $value) use ($getAppCaller, $getLivewireContext, $shouldLogViolation) {
+                $caller = $getAppCaller();
+                $detail = implode(', ', $value);
+
+                if ($shouldLogViolation('discarded_attributes', $model, $detail, $caller)) {
+                    Log::notice("Strictness Violation: Discarded Attributes: {$model->getTable()}.{$model->getKey()}: attributes: " . implode(', ', $value), [
+                        'file'    => $caller['file'],
+                        'line'    => $caller['line'],
+                        'url'     => request()->fullUrl(),
+                        'user'    => auth()->user() ? auth()->user()->id : 'Guest',
+                        'context' => $getLivewireContext(),
+                    ]);
+                }
             });
-            Model::handleMissingAttributeViolationUsing(static function (Model $model, mixed $value) {
-                Log::notice("Strictness Violation: Missing Attribute: {$model->getTable()}.{$model->getKey()}: attribute: $value", [
-                    'url'  => request()->fullUrl(),
-                    'user' => auth()->user() ? auth()->user()->id : 'Guest',
-                ]);
+            Model::handleMissingAttributeViolationUsing(static function (Model $model, mixed $value) use ($getAppCaller, $getLivewireContext, $shouldLogViolation) {
+                $caller = $getAppCaller();
+                if ($shouldLogViolation('missing_attribute', $model, (string) $value, $caller)) {
+                    Log::notice("Strictness Violation: Missing Attribute: {$model->getTable()}.{$model->getKey()}: attribute: $value", [
+                        'file'    => $caller['file'],
+                        'line'    => $caller['line'],
+                        'url'     => request()->fullUrl(),
+                        'user'    => auth()->user() ? auth()->user()->id : 'Guest',
+                        'context' => $getLivewireContext(),
+                    ]);
+                }
             });
+        }
+
+        // eager load models when needed
+        Model::automaticallyEagerLoadRelationships();
+
+        // URL Scheme Force HTTPS
+        URL::forceHttps();
+
+        // Filament Tables Currency
+        Table::configureUsing(static function (Table $table) {
+            $table->defaultCurrency('ZAR')
+                ->defaultNumberLocale('en_ZA');
+        });
+
+        // Illuminate Number currency & locale
+        Number::useLocale('en_ZA');
+        Number::useCurrency('ZAR');
+
+        // Carbon Localized translations
+        Carbon::setLocale(config('app.locale'));
+
+        // Prohibit destructive commands in Production
+        DB::prohibitDestructiveCommands($this->app->isProduction());
+
+        // For local error, show full errors
+        if (app()->isLocal()) {
+            RequestException::dontTruncate();
         }
     }
 
@@ -144,10 +252,7 @@ final class AppServiceProvider extends ServiceProvider
      * 3. Prevent Accessing Missing Attributes
      * Reference: https://coderflex.com/blog/laravel-strict-mode-all-what-you-need-to-know
      */
-    private function configureStrictMode(): void
-    {
-        Model::shouldBeStrict(app()->isLocal());
-    }
+    private function configureStrictMode(): void {}
 
     /**
      * Configure LogViewer settings, grant access to developers.
