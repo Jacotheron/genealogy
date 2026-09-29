@@ -11,7 +11,7 @@ new class extends Component
     use App\Livewire\Traits\AuthorizesPersonActions;
     use App\Livewire\Traits\HandlesPhotoUploads, \App\Livewire\Traits\SavesPersonPhotos;
     use App\Livewire\Traits\TrimStringsAndConvertEmptyStringsToNull;
-    use \Livewire\WithFileUploads, TallStackUi\Traits\Interactions;
+    use Livewire\WithFileUploads, TallStackUi\Traits\Interactions;
 
     public Person $person;
 

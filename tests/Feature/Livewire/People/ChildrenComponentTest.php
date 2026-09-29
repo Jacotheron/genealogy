@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\Person;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Livewire;
 
 uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
@@ -60,9 +59,9 @@ test('a user cannot disconnect a person who is not the displayed parent’s chil
     $mother = Person::factory()->create(['sex' => 'f', 'team_id' => $editor->current_team_id]);
     $child  = Person::factory()->create(['mother_id' => $mother->id, 'team_id' => $editor->current_team_id]);
 
-    expect(fn () => Livewire::test('people::children', ['person' => $parent])
-        ->call('disconnect', $child->id))
-        ->toThrow(ModelNotFoundException::class);
+    Livewire::test('people::children', ['person' => $parent])
+        ->call('disconnect', $child->id)
+        ->assertStatus(404);
 
     expect($child->fresh()->mother_id)->toBe($mother->id);
 });
