@@ -47,6 +47,29 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Intercept native errors before Laravel's internal handler processes them
+        $previous = set_error_handler(static function (int $level, string $message, string $file = '', int $line = 0) use (&$previous) {
+            // Target both internal and user-triggered deprecations
+            if (in_array($level, [E_DEPRECATED, E_USER_DEPRECATED], true)) {
+                // Create a unique cache fingerprint based on the warning string and file location
+                $cacheKey = 'deprecation_throttle:' . md5($message . $file . $line);
+                // If this specific deprecation has been seen in the last 24 hours...
+                if (Cache::has($cacheKey)) {
+                    // Return true to completely swallow the error and prevent Laravel/Debugbar from seeing it
+                    return true;
+                }
+                // Cache the fingerprint for 24 hours
+                $cache_expiry = now()->addMinutes(5);
+                if (app()->environment() === 'production') {
+                    $cache_expiry->addDay();
+                }
+                Cache::put($cacheKey, true, $cache_expiry);
+            }
+
+            // Return false to pass the error down to Laravel's default handler (logging + Debugbar)
+            return $previous !== null ? $previous($level, $message, $file, $line) : false;
+        });
+
         // ------------------------------------------------------------------------------
         // Configure application settings and services
         // ------------------------------------------------------------------------------
