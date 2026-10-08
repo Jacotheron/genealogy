@@ -85,10 +85,12 @@ new class extends Component
 
     public function openModal(?int $eventId = null): void
     {
+        $this->authorizePermission('person:update');
+
         $this->resetValidation();
 
         if ($eventId) {
-            $event = PersonEvent::query()->findOrFail($eventId);
+            $event = $this->person->events()->findOrFail($eventId);
 
             $this->editingEventId = $event->id;
             $this->type           = $event->type;
@@ -152,7 +154,7 @@ new class extends Component
         ];
 
         if ($this->editingEventId) {
-            PersonEvent::query()->findOrFail($this->editingEventId)->update($data);
+            $this->person->events()->findOrFail($this->editingEventId)->update($data);
         } else {
             PersonEvent::query()->create($data);
         }

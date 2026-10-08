@@ -72,10 +72,10 @@ final class UserLogin
         if ($position = Location::get()) {
             Userlog::query()
                 ->create([
-                    'user_id'      => $userId,
-                    'country_name' => $position->countryName ?? null,
-                    'country_code' => $position->countryCode ?? null,
-                ]);
+                'user_id'      => $userId,
+                'country_name' => $position->countryName ?? null,
+                'country_code' => mb_strtoupper($position->countryCode) ?? null,
+            ]);
         }
     }
 }

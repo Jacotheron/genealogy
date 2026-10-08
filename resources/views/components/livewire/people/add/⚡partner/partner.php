@@ -11,7 +11,6 @@ use App\Models\Couple;
 use App\Models\Person;
 use App\Rules\DobValid;
 use App\Rules\YobValid;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use TallStackUi\Traits\Interactions;
@@ -27,9 +26,6 @@ new class extends Component
 
     public PersonForm $form;
 
-    /** @var Collection<int, array{id: int, name: string}> */
-    public Collection $persons;
-
     public ?string $selectedTab = null;
 
     public ?string $date_start = null;
@@ -42,18 +38,7 @@ new class extends Component
 
     public function mount(): void
     {
-        $this->persons = Person::query()
-            ->partnerOffset($this->person->dob, $this->person->yob)
-            ->where('id', '!=', $this->person->id)
-            ->orderBy('firstname')
-            ->orderBy('surname')
-            ->get()
-            ->map(fn ($p): array => [
-                'id'   => $p->id,
-                'name' => $p->name . ' [' . (($p->sex === 'm') ? __('app.male') : __('app.female')) . '] ' . ($p->birth_formatted ? ' (' . $p->birth_formatted . ')' : ''),
-            ]);
-
-        $this->selectedTab = $this->persons->isEmpty() ? __('person.add_new_person_as_partner') : __('person.add_existing_person_as_partner');
+        $this->selectedTab = __('person.add_new_person_as_partner');
     }
 
     public function savePartner(): void
@@ -92,9 +77,16 @@ new class extends Component
      */
     protected function linkExistingPartner(array $validated): void
     {
-        $couple = Couple::query()->create([
+        $partner = Person::query()
+            ->whereKey($validated['form']['person_id'])
+            ->where('team_id', $this->person->team_id)
+            ->where('id', '!=', $this->person->id)
+            ->partnerOffset($this->person->dob, $this->person->yob)
+            ->firstOrFail();
+
+        $couple = Couple::create([
             'person1_id' => $this->person->id,
-            'person2_id' => $validated['form']['person_id'],
+            'person2_id' => $partner->id,
             'date_start' => $validated['date_start'] ?? null,
             'date_end'   => $validated['date_end'] ?? null,
             'is_married' => $validated['is_married'],
