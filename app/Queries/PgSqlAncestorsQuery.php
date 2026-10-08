@@ -30,9 +30,9 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
      *     sequence: string
      * }>
      */
-    public function getAncestors(int $personId, int $maxDepth): Collection
+    public function getAncestors(int $personId, int $teamId, int $maxDepth): Collection
     {
-        return collect(DB::select($this->getRecursiveQuery($personId, $maxDepth)));
+        return collect(DB::select($this->getRecursiveQuery(), [$personId, $teamId, $teamId, $maxDepth, $teamId, $maxDepth]));
     }
 
     /**
@@ -43,7 +43,7 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
      * both father_id and mother_id independently, which is significantly faster
      * on large tables.
      *
-     * The sequence column doubles as a cycle guard via FIND_IN_SET: if a person's
+     * The sequence column doubles as a cycle guard: if a person's
      * id already appears in the ancestor chain, the join condition excludes them.
      * This prevents infinite loops caused by circular references in the data.
      *
@@ -56,7 +56,7 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
      *             when largest id is 8 digits (max 99.999.999), the maximum level depth is 1024 / (8 + 1) = 113 levels
      *             ...
      */
-    private function getRecursiveQuery(int $personId, int $maxDepth): string
+    private function getRecursiveQuery(): string
     {
         return "
             WITH RECURSIVE ancestors AS (
@@ -65,7 +65,7 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
                     0 AS degree,
                     CAST(id AS VARCHAR(1024)) AS sequence
                 FROM people
-                WHERE deleted_at IS NULL AND id = $personId
+                WHERE deleted_at IS NULL AND id = ? AND team_id = ?
 
                 UNION ALL
 
@@ -75,7 +75,7 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
                     a.sequence || ',' || p.id AS sequence
                 FROM people p
                 JOIN ancestors a ON a.father_id = p.id
-                WHERE p.deleted_at IS NULL AND a.degree < $maxDepth AND NOT FIND_IN_SET(p.id, sequence)
+                WHERE p.deleted_at IS NULL AND p.team_id = ? AND a.degree < ? AND POSITION(',' || p.id::text || ',' IN ',' || a.sequence || ',') = 0
 
                 UNION ALL
 
@@ -85,7 +85,7 @@ final class PgSqlAncestorsQuery implements AncestorsQueryInterface
                     a.sequence || ',' || p.id AS sequence
                 FROM people p
                 JOIN ancestors a ON a.mother_id = p.id
-                WHERE p.deleted_at IS NULL AND a.degree < $maxDepth AND NOT FIND_IN_SET(p.id, sequence)
+                WHERE p.deleted_at IS NULL AND p.team_id = ? AND a.degree < ? AND POSITION(',' || p.id::text || ',' IN ',' || a.sequence || ',') = 0
             )
 
             SELECT * FROM ancestors

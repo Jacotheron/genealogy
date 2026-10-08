@@ -23,6 +23,7 @@ new class extends Component
 
     // ------------------------------------------------------------------------------
     #[On('person_added_as_child')]
+    #[On('person_disconnected_as_child')]
     #[On('couple_added')]
     #[On('couple_deleted')]
     public function mount(): void
@@ -51,9 +52,13 @@ new class extends Component
     {
         $this->authorizePermission('person:update');
 
-        $child = Person::findOrFail($child_id);
-
         $key = $this->person->sex === 'm' ? 'father_id' : 'mother_id';
+
+        $child = Person::query()
+            ->whereKey($child_id)
+            ->where($key, $this->person->id)
+            ->firstOrFail();
+
         $child->update([$key => null]);
 
         $this->toast()->success(__('app.disconnect'), e($child->name) . ' ' . __('app.disconnected') . '.')->send();

@@ -56,6 +56,8 @@ class ZipImporter
         }
 
         try {
+            $this->validateArchiveLimits($zip);
+
             // Create temp directory
             if (! is_dir($this->tempPath)) {
                 mkdir($this->tempPath, 0755, true);
@@ -74,7 +76,8 @@ class ZipImporter
             // follows path components inside entry names (e.g. "../../public/shell.php"),
             // which allows a malicious archive to write files anywhere on the filesystem
             // — a vulnerability known as Zip Slip (CWE-22 / path traversal).
-            $count = $zip->count();
+            $count               = $zip->count();
+            $totalExtractedBytes = 0;
 
             for ($i = 0; $i < $count; $i++) {
                 $entryName = $zip->getNameIndex($i);
@@ -116,14 +119,7 @@ class ZipImporter
                     continue;
                 }
 
-                $content = $zip->getFromIndex($i);
-
-                if ($content === false) {
-                    Log::warning('GEDCOM ZIP: Could not read entry', ['entry' => $entryName]);
-                    continue;
-                }
-
-                file_put_contents($destination, $content);
+                $this->extractEntry($zip, $entryName, $destination, $totalExtractedBytes);
             }
 
             $zip->close();
@@ -164,6 +160,101 @@ class ZipImporter
     {
         if (is_dir($this->tempPath)) {
             $this->deleteDirectory($this->tempPath);
+        }
+    }
+
+    /**
+     * Reject archives before extraction when their declared size or file count exceeds safe limits.
+     */
+    private function validateArchiveLimits(ZipArchive $zip): void
+    {
+        $maxEntries     = max(1, (int) config('app.gedcom_import.max_archive_entries'));
+        $maxEntrySize   = max(1, (int) config('app.gedcom_import.max_archive_entry_size'));
+        $maxArchiveSize = max(1, (int) config('app.gedcom_import.max_archive_size'));
+        $count          = $zip->count();
+
+        if ($count > $maxEntries) {
+            throw new Exception("ZIP archive contains more than {$maxEntries} entries.");
+        }
+
+        $declaredSize = 0;
+
+        for ($index = 0; $index < $count; $index++) {
+            $statistics = $zip->statIndex($index);
+
+            if ($statistics === false) {
+                throw new Exception('Could not inspect ZIP archive entry.');
+            }
+
+            $entrySize = (int) ($statistics['size'] ?? 0);
+
+            if ($entrySize > $maxEntrySize) {
+                throw new Exception("ZIP archive entry exceeds the {$maxEntrySize}-byte limit.");
+            }
+
+            $declaredSize += $entrySize;
+
+            if ($declaredSize > $maxArchiveSize) {
+                throw new Exception("ZIP archive exceeds the {$maxArchiveSize}-byte limit.");
+            }
+        }
+    }
+
+    /**
+     * Stream one entry to disk while enforcing the limits against actual decompressed bytes.
+     * This prevents ZIP metadata from bypassing the declared-size checks.
+     */
+    private function extractEntry(ZipArchive $zip, string $entryName, string $destination, int &$totalExtractedBytes): void
+    {
+        $source = $zip->getStream($entryName);
+
+        if (! is_resource($source)) {
+            throw new Exception("Could not read ZIP archive entry: {$entryName}");
+        }
+
+        $target = fopen($destination, 'wb');
+
+        if ($target === false) {
+            fclose($source);
+
+            throw new Exception("Could not create extracted file: {$entryName}");
+        }
+
+        $maxEntrySize   = max(1, (int) config('app.gedcom_import.max_archive_entry_size'));
+        $maxArchiveSize = max(1, (int) config('app.gedcom_import.max_archive_size'));
+        $entryBytes     = 0;
+
+        try {
+            while (! feof($source)) {
+                $contents = fread($source, 1048576);
+
+                if ($contents === false) {
+                    throw new Exception("Could not read ZIP archive entry: {$entryName}");
+                }
+
+                $contentsLength = mb_strlen($contents, '8bit');
+                $entryBytes += $contentsLength;
+                $totalExtractedBytes += $contentsLength;
+
+                if ($entryBytes > $maxEntrySize || $totalExtractedBytes > $maxArchiveSize) {
+                    throw new Exception('ZIP archive exceeds the configured extraction limits.');
+                }
+
+                $bytesWritten = 0;
+
+                while ($bytesWritten < $contentsLength) {
+                    $written = fwrite($target, mb_substr($contents, $bytesWritten, null, '8bit'));
+
+                    if ($written === false || $written === 0) {
+                        throw new Exception("Could not write extracted file: {$entryName}");
+                    }
+
+                    $bytesWritten += $written;
+                }
+            }
+        } finally {
+            fclose($source);
+            fclose($target);
         }
     }
 
