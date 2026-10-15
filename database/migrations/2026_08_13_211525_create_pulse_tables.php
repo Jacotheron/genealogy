@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Pulse\Support\PulseMigration;
@@ -22,8 +24,8 @@ return new class extends PulseMigration
             $table->mediumText('key');
             match ($this->driver()) {
                 'mariadb', 'mysql' => $table->char('key_hash', 32)->charset('binary')->virtualAs('unhex(sha2(`key`,256))'),
-                'pgsql' => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
-                'sqlite' => $table->string('key_hash'),
+                'pgsql'            => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
+                'sqlite'           => $table->string('key_hash'),
             };
             $table->mediumText('value');
 
@@ -39,8 +41,8 @@ return new class extends PulseMigration
             $table->mediumText('key');
             match ($this->driver()) {
                 'mariadb', 'mysql' => $table->char('key_hash', 32)->charset('binary')->virtualAs('unhex(sha2(`key`,256))'),
-                'pgsql' => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
-                'sqlite' => $table->string('key_hash'),
+                'pgsql'            => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
+                'sqlite'           => $table->string('key_hash'),
             };
             $table->bigInteger('value')->nullable();
 
@@ -58,8 +60,8 @@ return new class extends PulseMigration
             $table->mediumText('key');
             match ($this->driver()) {
                 'mariadb', 'mysql' => $table->char('key_hash', 32)->charset('binary')->virtualAs('unhex(sha2(`key`,256))'),
-                'pgsql' => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
-                'sqlite' => $table->string('key_hash'),
+                'pgsql'            => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
+                'sqlite'           => $table->string('key_hash'),
             };
             $table->string('aggregate');
             $table->decimal('value', 20, 2);

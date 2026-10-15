@@ -16,15 +16,12 @@ final class OwnershipTransferred extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
-     *
-     * @param Team $team
      */
     public function __construct(public Team $team) {}
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
      * @return array<int, string>
      */
     public function via(mixed $notifiable): array
@@ -34,9 +31,6 @@ final class OwnershipTransferred extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return MailMessage
      */
     public function toMail(mixed $notifiable): MailMessage
     {

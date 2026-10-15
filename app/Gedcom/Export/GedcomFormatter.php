@@ -90,7 +90,7 @@ class GedcomFormatter
      * Format coordinates for GEDCOM output.
      * GEDCOM 7.0 uses specific coordinate format requirements.
      *
-     * @param float|string $coordinate  Coordinate value
+     * @param  float|string  $coordinate  Coordinate value
      * @param  string  $type  'latitude' or 'longitude'
      * @return string Formatted GEDCOM coordinate
      */

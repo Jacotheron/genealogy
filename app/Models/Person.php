@@ -963,6 +963,18 @@ final class Person extends Model implements HasMedia
         ];
     }
 
+    protected function getFilter()
+    {
+        $countries = new Countries(app()->getLocale());
+
+        return array_filter([
+            mb_trim("$this->street $this->number"),
+            mb_trim("$this->postal_code $this->city"),
+            mb_trim("$this->province $this->state"),
+            $this->country ? $countries->getCountryName($this->country) : null,
+        ]);
+    }
+
     /* -------------------------------------------------------------------------------------------- */
     // Optimized relationship methods for siblings
     /* -------------------------------------------------------------------------------------------- */
@@ -1001,17 +1013,5 @@ final class Person extends Model implements HasMedia
             $sharedFather || $sharedMother                     => '[1/2]',  // Half siblings
             default                                            => '[+]'     // Step-siblings
         };
-    }
-
-    protected function getFilter()
-    {
-        $countries = new Countries(app()->getLocale());
-
-        return array_filter([
-            mb_trim("$this->street $this->number"),
-            mb_trim("$this->postal_code $this->city"),
-            mb_trim("$this->province $this->state"),
-            $this->country ? $countries->getCountryName($this->country) : null,
-        ]);
     }
 }

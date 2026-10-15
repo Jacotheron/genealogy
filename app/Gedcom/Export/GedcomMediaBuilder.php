@@ -220,6 +220,7 @@ class GedcomMediaBuilder
     {
         // Convert filename to readable title
         $title = str_replace(['_', '-'], ' ', $filename);
+
         return ucwords($title);
     }
 
