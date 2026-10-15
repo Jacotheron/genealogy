@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
+use Closure;
 use Exception;
 use Filament\Tables\Table;
 use Illuminate\Container\EntryNotFoundException;
@@ -117,10 +118,26 @@ final class AppServiceProvider extends ServiceProvider
 
         // Password Rules
         Password::defaults(function () {
-            $local_rule = Password::min(8);
+            $local_rule = Password::min(8)
+                ->max(72)
+                ->rules([
+                    function (string $attribute, mixed $value, Closure $fail) {
+                        if (mb_strlen($value) > 72) {
+                            $fail('The :attribute is too long. Max 72 bytes long.');
+                        }
+                    },
+                ]);
 
             if ($this->app->isProduction()) {
                 return Password::min(10)
+                    ->max(72)
+                    ->rules([
+                        function (string $attribute, mixed $value, Closure $fail) {
+                            if (mb_strlen($value) > 72) {
+                                $fail('The :attribute is too long. Max 72 bytes long.');
+                            }
+                        },
+                    ])
                     ->letters()
                     ->mixedCase()
                     ->numbers()
